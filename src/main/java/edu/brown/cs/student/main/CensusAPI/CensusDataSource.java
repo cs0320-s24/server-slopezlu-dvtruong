@@ -1,4 +1,4 @@
 package edu.brown.cs.student.main.CensusAPI;
 
-public class CensusAPISource {
+public class CensusDataSource {
 }

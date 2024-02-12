@@ -50,7 +50,7 @@ public class StateCountyCodeFetcher {
 
         for (int i=1; i < countyCodeData.size(); i++) {
             List<String> county = countyCodeData.get(i);
-            if (county.get(0).split(",")[0].equals(countyName)) {
+            if (county.get(0).split(",")[0].replace(" ", "").equalsIgnoreCase(countyName)) {
                 return Integer.parseInt(county.get(2));
             }
         }

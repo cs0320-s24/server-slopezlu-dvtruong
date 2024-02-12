@@ -23,11 +23,15 @@ import java.util.Map;
 public class CensusAPIHandler implements Route {
     private Map<String, Integer> stateCodes;
 
-    public CensusAPIHandler() throws IOException {
-        this.stateCodes = new StateCountyCodeFetcher().getStateCodes();
+    public CensusAPIHandler() {
+        try {
+            this.stateCodes = new StateCountyCodeFetcher().getStateCodes();
+    } catch (IOException e) {
+            //idk what to put here
+        }
     }
 
-    @Override
+        @Override
     public Object handle(Request request, Response response) throws Exception {
         Moshi moshi = new Moshi.Builder().build();
 
@@ -36,7 +40,7 @@ public class CensusAPIHandler implements Route {
         JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
         //For the retrieved data
-        JsonAdapter<CensusAPIData> CensusDataAdapter = moshi.adapter(CensusAPIData.class);
+        JsonAdapter<broadbandData> CensusDataAdapter = moshi.adapter(broadbandData.class);
         //We think we need to use a map to store the response we get from the api server
         //Need to create a record (which should take in the map that we mentioned above)
 
@@ -52,8 +56,9 @@ public class CensusAPIHandler implements Route {
             return adapter.toJson(responseMap);
         }
 
-        int code = new StateCountyCodeFetcher().getCountyCode(this.stateCodes.get(state), county);
-        if (code == 0) {
+        int stateCode = this.stateCodes.get(state);
+        int countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
+        if (countyCode == 0) {
             responseMap.put("result", "error_bad_request");
             responseMap.put("query_state", state);
             responseMap.put("query_county", county);
@@ -61,7 +66,12 @@ public class CensusAPIHandler implements Route {
             return adapter.toJson(responseMap);
         }
 
+        try {
+            broadbandData data = new CensusAPISource().getCountyData(countyCode, stateCode);
 
+        }
+
+        
         return null;
     }
 

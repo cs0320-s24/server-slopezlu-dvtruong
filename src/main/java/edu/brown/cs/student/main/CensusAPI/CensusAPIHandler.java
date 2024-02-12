@@ -31,7 +31,7 @@ public class CensusAPIHandler implements Route {
         }
     }
 
-        @Override
+    @Override
     public Object handle(Request request, Response response) throws Exception {
         Moshi moshi = new Moshi.Builder().build();
 
@@ -68,7 +68,16 @@ public class CensusAPIHandler implements Route {
 
         try {
             broadbandData data = new CensusAPISource().getCountyData(countyCode, stateCode);
-
+            responseMap.put("result", "success");
+            responseMap.put("state", state);
+            responseMap.put("county", county);
+            responseMap.put("percentage of people that have broadband access", CensusDataAdapter.toJson(data));
+            return adapter.toJson(responseMap);
+        } catch (IOException e) {
+            responseMap.put("result", "error_datasource");
+            responseMap.put("query_state", state);
+            responseMap.put("query_county", county);
+            return adapter.toJson(responseMap);
         }
 
         

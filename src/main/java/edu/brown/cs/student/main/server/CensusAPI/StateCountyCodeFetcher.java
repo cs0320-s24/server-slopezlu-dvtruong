@@ -33,7 +33,7 @@ public class StateCountyCodeFetcher {
     Map<String, String> stateCodeMap = new HashMap<>();
     for (int i = 1; i < stateCodeData.size(); i++) {
       List<String> state = stateCodeData.get(i);
-      stateCodeMap.put(state.get(0), state.get(1));
+      stateCodeMap.put(state.get(0).toLowerCase().replace(" ", "_"), state.get(1));
     }
     return stateCodeMap;
   }
@@ -56,7 +56,7 @@ public class StateCountyCodeFetcher {
 
     for (int i = 1; i < countyCodeData.size(); i++) {
       List<String> county = countyCodeData.get(i);
-      if (county.get(0).split(",")[0].replace(" ", "").equalsIgnoreCase(countyName)) {
+      if (county.get(0).split(",")[0].replace(" ", "_").equalsIgnoreCase(countyName)) {
         return county.get(2);
       }
     }

@@ -27,7 +27,7 @@ public class CensusAPIHandler implements Route {
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
 
     // For the retrieved data
-    JsonAdapter<broadbandData> CensusDataAdapter = moshi.adapter(broadbandData.class);
+    // JsonAdapter<broadbandData> CensusDataAdapter = moshi.adapter(broadbandData.class);
     // We think we need to use a map to store the response we get from the api server
     // Need to create a record (which should take in the map that we mentioned above)
 
@@ -58,8 +58,7 @@ public class CensusAPIHandler implements Route {
       responseMap.put("result", "success");
       responseMap.put("state", state);
       responseMap.put("county", county);
-      responseMap.put(
-          "percentage of people that have broadband access", CensusDataAdapter.toJson(data));
+      responseMap.put("percentage of people that have broadband access", data.S2802_C03_022E());
       return adapter.toJson(responseMap);
     } catch (IOException e) {
       responseMap.put("result", "error_datasource");

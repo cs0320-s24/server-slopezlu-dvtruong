@@ -5,6 +5,8 @@ import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import spark.Request;
@@ -33,6 +35,7 @@ public class CensusAPIHandler implements Route {
 
     // create a response map
     Map<String, Object> responseMap = new HashMap<>();
+    LocalDateTime requestTime = LocalDateTime.now();
 
     String state = request.queryParams("state");
     String county = request.queryParams("county");
@@ -40,6 +43,9 @@ public class CensusAPIHandler implements Route {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_state", state);
       responseMap.put("query_county", county);
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
       return adapter.toJson(responseMap);
     }
 
@@ -50,6 +56,9 @@ public class CensusAPIHandler implements Route {
       responseMap.put("query_state", state);
       responseMap.put("query_county", county);
       responseMap.put("message", "county doesn't exist within specified state");
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
       return adapter.toJson(responseMap);
     }
 
@@ -59,11 +68,17 @@ public class CensusAPIHandler implements Route {
       responseMap.put("state", state);
       responseMap.put("county", county);
       responseMap.put("percentage of people that have broadband access", data.S2802_C03_022E());
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
       return adapter.toJson(responseMap);
     } catch (IOException e) {
       responseMap.put("result", "error_datasource");
       responseMap.put("query_state", state);
       responseMap.put("query_county", county);
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
       return adapter.toJson(responseMap);
     }
   }

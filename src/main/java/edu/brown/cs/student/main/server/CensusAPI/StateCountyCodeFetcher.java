@@ -33,7 +33,7 @@ public class StateCountyCodeFetcher {
     Map<String, Integer> stateCodeMap = new HashMap<>();
     for (int i = 1; i < stateCodeData.size(); i++) {
       List<String> state = stateCodeData.get(i);
-      stateCodeMap.put(state.get(0), Integer.parseInt(state.get(1)));
+      stateCodeMap.put(state.get(0).toLowerCase(), Integer.parseInt(state.get(1)));
     }
     return stateCodeMap;
   }

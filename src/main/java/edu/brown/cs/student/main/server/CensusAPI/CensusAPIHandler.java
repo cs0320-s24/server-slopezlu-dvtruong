@@ -12,9 +12,9 @@ import spark.Response;
 import spark.Route;
 
 public class CensusAPIHandler implements Route {
-  private Map<String, Integer> stateCodes;
+  private Map<String, String> stateCodes;
 
-  public CensusAPIHandler(Map<String, Integer> stateCodes) {
+  public CensusAPIHandler(Map<String, String> stateCodes) {
     this.stateCodes = stateCodes;
   }
 
@@ -43,9 +43,9 @@ public class CensusAPIHandler implements Route {
       return adapter.toJson(responseMap);
     }
 
-    int stateCode = this.stateCodes.get(state);
-    int countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
-    if (countyCode == 0) {
+    String stateCode = this.stateCodes.get(state);
+    String countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
+    if (countyCode.equals("0")) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_state", state);
       responseMap.put("query_county", county);

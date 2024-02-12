@@ -9,7 +9,7 @@ import java.net.URLConnection;
 import okio.Buffer;
 
 public class CensusAPISource {
-  public broadbandData getCountyData(int countyCode, int stateCode) throws IOException {
+  public broadbandData getCountyData(String countyCode, String stateCode) throws IOException {
     URL requestURL =
         new URL(
             "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:"

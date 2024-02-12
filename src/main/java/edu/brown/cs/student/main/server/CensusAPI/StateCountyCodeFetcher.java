@@ -15,7 +15,7 @@ import okio.Buffer;
 
 public class StateCountyCodeFetcher {
 
-  public Map<String, Integer> getStateCodes() throws IOException {
+  public Map<String, String> getStateCodes() throws IOException {
     URL getStateCodesRequestURL =
         new URL("https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:*");
     URLConnection urlConnection = getStateCodesRequestURL.openConnection();
@@ -30,15 +30,15 @@ public class StateCountyCodeFetcher {
     List<List<String>> stateCodeData =
         adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
 
-    Map<String, Integer> stateCodeMap = new HashMap<>();
+    Map<String, String> stateCodeMap = new HashMap<>();
     for (int i = 1; i < stateCodeData.size(); i++) {
       List<String> state = stateCodeData.get(i);
-      stateCodeMap.put(state.get(0), Integer.parseInt(state.get(1)));
+      stateCodeMap.put(state.get(0), state.get(1));
     }
     return stateCodeMap;
   }
 
-  public int getCountyCode(int stateCode, String countyName) throws IOException {
+  public String getCountyCode(String stateCode, String countyName) throws IOException {
     URL getCountyCodesRequestURL =
         new URL(
             "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" + stateCode);
@@ -57,9 +57,9 @@ public class StateCountyCodeFetcher {
     for (int i = 1; i < countyCodeData.size(); i++) {
       List<String> county = countyCodeData.get(i);
       if (county.get(0).split(",")[0].replace(" ", "").equalsIgnoreCase(countyName)) {
-        return Integer.parseInt(county.get(2));
+        return county.get(2);
       }
     }
-    return 0;
+    return "0";
   }
 }

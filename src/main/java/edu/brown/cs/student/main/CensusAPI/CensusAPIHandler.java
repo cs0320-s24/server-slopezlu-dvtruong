@@ -63,6 +63,7 @@ public class CensusAPIHandler implements Route {
         try {
             broadbandData data = new CensusAPIDataSource().getCountyData(countyCode, stateCode);
         }
+        catch(){}
         return null;
     }
 

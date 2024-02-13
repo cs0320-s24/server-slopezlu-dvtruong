@@ -39,6 +39,7 @@ public class CensusAPIHandler implements Route {
 
     String state = request.queryParams("state");
     String county = request.queryParams("county");
+    // specify more by adding more else if statements for if only one of them is null
     if ((state == null) || (county == null)) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_state", state);
@@ -49,7 +50,7 @@ public class CensusAPIHandler implements Route {
       return adapter.toJson(responseMap);
     }
 
-    String stateCode = this.stateCodes.get(state);
+    String stateCode = this.stateCodes.get(state.toLowerCase());
     String countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
     if (countyCode.equals("0")) {
       responseMap.put("result", "error_bad_request");

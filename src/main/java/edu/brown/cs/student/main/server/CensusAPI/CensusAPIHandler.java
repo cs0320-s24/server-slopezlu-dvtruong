@@ -39,7 +39,7 @@ public class CensusAPIHandler implements Route {
 
     String state = request.queryParams("state");
     String county = request.queryParams("county");
-    //specify more by adding more else if statements for if only one of them is null
+    // specify more by adding more else if statements for if only one of them is null
     if ((state == null) || (county == null)) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_state", state);

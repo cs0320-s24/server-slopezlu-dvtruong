@@ -9,12 +9,14 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class CSVDataSource {
   private List<List<String>> csv;
   private List<List<String>> publicCSV;
-  private HashMap<String, Integer> headers;
+  private Map<String, Integer> headers;
+  private Map<String, Integer> publicHeaders;
 
   public CSVDataSource() {
     this.csv = null; // not sure if using null in this case is smart
@@ -32,18 +34,12 @@ public class CSVDataSource {
     String firstRow = reader.readLine();
     String[] rowArray = regexSplitCSVRow.split(firstRow);
 
-    //for the headers
+    // for the headers
     this.headers = new HashMap<>();
     if (headersOrNot) {
       int i = 0;
-      for (String item: rowArray) {
+      for (String item : rowArray) {
         this.headers.put(item, i);
-        i++;
-      }
-    } else {
-      int i = 0;
-      for (String item: rowArray) {
-        this.headers.put(Integer.toString(i), i);
         i++;
       }
     }
@@ -63,5 +59,12 @@ public class CSVDataSource {
       this.publicCSV = Collections.unmodifiableList(this.csv);
     }
     return publicCSV;
+  }
+
+  public Map<String, Integer> headersProxy() {
+    if (publicHeaders == null) {
+      this.publicHeaders = Collections.unmodifiableMap(this.headers);
+    }
+    return publicHeaders;
   }
 }

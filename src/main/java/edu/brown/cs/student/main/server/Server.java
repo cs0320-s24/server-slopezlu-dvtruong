@@ -2,6 +2,7 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import edu.brown.cs.student.main.CSVAPI.LoadCSVHandler;
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPIHandler;
 import edu.brown.cs.student.main.server.CensusAPI.StateCountyCodeFetcher;
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class Server {
           response.header("Access-Control-Allow-Method", "*");
         });
     Spark.get("/broadband", new CensusAPIHandler(new StateCountyCodeFetcher().getStateCodes()));
+//    Spark.get("/loadcsv", new LoadCSVHandler());
     Spark.init();
     Spark.awaitInitialization();
   }

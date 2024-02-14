@@ -1,8 +1,5 @@
 package edu.brown.cs.student.main;
 
-import edu.brown.cs.student.main.Parser.Creator.FactoryFailureException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +17,7 @@ public class CSVSearch {
    * @param useColumnHeader a boolean indicating whether to use the headers or to use column index
    *     or none
    * @return a List of List of Strings that contain the appropriate rows for the search
-   * @throws FileNotFoundException if the file doesn't exist
-   * @throws IOException if there was another error when trying to read/parse the CSV file
-   * @throws FactoryFailureException if the number of rows in consistent
+   * @throws IllegalArgumentException if the column identifier does not exist in the map
    */
   public List<List<String>> search(
       List<List<String>> csvFile,
@@ -34,6 +29,9 @@ public class CSVSearch {
     // search
     List<List<String>> result = new ArrayList<>();
     if (useColumnHeader.equals("true") && !columnIdentifier.isEmpty()) {
+      if (!headers.containsKey(columnIdentifier)) {
+        throw new IllegalArgumentException("Column identifier does not exist in headers");
+      }
       int columnToLookAt = headers.get(columnIdentifier);
       for (List<String> row : csvFile) {
         if (row.get(columnToLookAt).toLowerCase().contains(searchFor.toLowerCase())) {
@@ -42,6 +40,9 @@ public class CSVSearch {
       }
     } else if (useColumnHeader.equals("false") && !columnIdentifier.isEmpty()) {
       int columnToLookAt = Integer.parseInt(columnIdentifier);
+      if (columnToLookAt < 0 || columnToLookAt >= csvFile.get(0).size()) {
+        throw new IllegalArgumentException("Column index is out of bounds");
+      }
       for (List<String> row : csvFile) {
         if (row.get(columnToLookAt).toLowerCase().contains(searchFor.toLowerCase())) {
           result.add(row);

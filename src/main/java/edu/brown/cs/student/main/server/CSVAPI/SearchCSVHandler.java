@@ -74,14 +74,14 @@ public class SearchCSVHandler implements Route {
                   columnIdentifier)));
       responseMap.put("message", "successfully performed a search");
       return adapter.toJson(responseMap);
+
     } catch (IllegalArgumentException e) {
+      System.out.println("catch block runs");
       responseMap.put("result", "error_no_such_column");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
-      //am i doing this right??
       if (useColumnHeaders.equals("true")) {
-        System.out.println("true is running");
         List<String> availableHeaders = new ArrayList<>();
         for (String key : data.headerProxy().keySet()) {
           availableHeaders.add(key);
@@ -90,10 +90,9 @@ public class SearchCSVHandler implements Route {
             "message",
             "column "
                 + columnIdentifier
-                + " was not found. The following column headers are available: "
+                + " was not found. Because useColumnHeaders=true, the following column headers are available: "
                 + availableHeaders);
       } else if (useColumnHeaders.equals("false")) {
-        System.out.println("false is running");
         List<Integer> indices = new ArrayList<>();
         for (int i = 0; i < data.headerProxy().keySet().size(); i++) {
           indices.add(i);
@@ -103,7 +102,7 @@ public class SearchCSVHandler implements Route {
             "message",
             "column "
                 + columnIdentifier
-                + " was not found. The following column indices are available: "
+                + " was not found. Because useColumnHeaders=false, the following column indices are available: "
                 + indices);
       }
       return adapter.toJson(responseMap);

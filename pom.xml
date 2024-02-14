@@ -7,7 +7,6 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
-
     <!-- Using latest LTS version (17) -->
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -23,6 +22,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>31.1-jre</version>
+    </dependency>
 
     <!--
            We use Moshi for serialization/deserialization of JSON data.
@@ -42,6 +46,7 @@
       <artifactId>moshi-adapters</artifactId>
       <version>1.13.0</version>
     </dependency>
+
 
     <!--
            Spark is a lightweight framework for creating web applications.

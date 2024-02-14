@@ -77,7 +77,7 @@ public class SearchCSVHandler implements Route {
           searchAdapter.toJson(
               searcher.search(
                   data.proxy(),
-                  data.headerProxy(),
+                  data.headersProxy(),
                   useColumnHeaders,
                   searchFor,
                   columnIdentifier)));
@@ -91,7 +91,7 @@ public class SearchCSVHandler implements Route {
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       if (useColumnHeaders.equals("true")) {
         List<String> availableHeaders = new ArrayList<>();
-        for (String key : data.headerProxy().keySet()) {
+        for (String key : data.headersProxy().keySet()) {
           availableHeaders.add(key);
         }
         responseMap.put(
@@ -102,7 +102,7 @@ public class SearchCSVHandler implements Route {
                 + availableHeaders);
       } else if (useColumnHeaders.equals("false")) {
         List<Integer> indices = new ArrayList<>();
-        for (int i = 0; i < data.headerProxy().keySet().size(); i++) {
+        for (int i = 0; i < data.headersProxy().keySet().size(); i++) {
           indices.add(i);
         }
 

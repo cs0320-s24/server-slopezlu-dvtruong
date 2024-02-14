@@ -107,7 +107,7 @@ public class CensusAPIHandler implements Route {
       responseMap.put("result", "success");
       responseMap.put("state", state);
       responseMap.put("county", county);
-      responseMap.put("percentage of people that have broadband access", data.data());
+      responseMap.put("percentage of people that have broadband access", data.data().get(3));
       responseMap.put(
           "date & time of request",
           requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

@@ -14,10 +14,10 @@ import spark.Response;
 import spark.Route;
 
 public class CensusAPIHandler implements Route {
-  private Map<String, String> stateCodes;
+  private BroadbandDataSource dataSource;
 
-  public CensusAPIHandler(Map<String, String> stateCodes) {
-    this.stateCodes = stateCodes;
+  public CensusAPIHandler(BroadbandDataSource dataSource) {
+    this.dataSource = dataSource;
   }
 
   @Override
@@ -27,11 +27,6 @@ public class CensusAPIHandler implements Route {
     // For the response map
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
-
-    // For the retrieved data
-    // JsonAdapter<broadbandData> CensusDataAdapter = moshi.adapter(broadbandData.class);
-    // We think we need to use a map to store the response we get from the api server
-    // Need to create a record (which should take in the map that we mentioned above)
 
     // create a response map
     Map<String, Object> responseMap = new HashMap<>();
@@ -77,40 +72,24 @@ public class CensusAPIHandler implements Route {
           "Please input a state to get data for. If there are spaces in the name, please replace them with _");
       return adapter.toJson(responseMap);
     }
-
-    String stateCode = this.stateCodes.get(state.toLowerCase());
-    if (stateCode == null) {
-      responseMap.put("result", "error_bad_request");
-      responseMap.put("query_state", state);
-      responseMap.put("query_county", county);
-      responseMap.put(
-          "date & time of request",
-          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-      responseMap.put("message", "No such state in the US.");
-      return adapter.toJson(responseMap);
-    }
-
-    String countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
-    if (countyCode.equals("0")) {
-      responseMap.put("result", "error_bad_request");
-      responseMap.put("query_state", state);
-      responseMap.put("query_county", county);
-      responseMap.put("message", "county doesn't exist within specified state");
-      responseMap.put(
-          "date & time of request",
-          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-      return adapter.toJson(responseMap);
-    }
-
     try {
-      broadbandData data = new CensusAPISource().getCountyData(countyCode, stateCode);
+      broadbandData data = this.dataSource.getCountyData(new stateCounty(state, county));
       responseMap.put("result", "success");
       responseMap.put("state", state);
       responseMap.put("county", county);
-      responseMap.put("percentage of people that have broadband access", data.data().get(3));
+      responseMap.put("percentage of people that have broadband access", data.data().get(1));
       responseMap.put(
           "date & time of request",
           requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+      return adapter.toJson(responseMap);
+    } catch (IllegalArgumentException e) {
+      responseMap.put("result", "error_datasource");
+      responseMap.put("query_state", state);
+      responseMap.put("query_county", county);
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+      responseMap.put("message", "state/county combination doesn't exist");
       return adapter.toJson(responseMap);
     } catch (IOException e) {
       responseMap.put("result", "error_datasource");

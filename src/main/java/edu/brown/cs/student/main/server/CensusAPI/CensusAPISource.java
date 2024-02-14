@@ -9,10 +9,47 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.Map;
 import okio.Buffer;
 
-public class CensusAPISource {
-  public broadbandData getCountyData(String countyCode, String stateCode) throws IOException {
+public class CensusAPISource implements BroadbandDataSource {
+  private Map<String, String> stateCodes;
+
+  public CensusAPISource() {
+    try {
+      this.stateCodes = new StateCountyCodeFetcher().getStateCodes();
+    } catch (IOException e) {
+      System.out.println(
+          "there was an error trying to contact the Census API in order to get the state codes");
+    }
+  }
+
+  private stateCountyCode resolveStateCounty(String state, String county)
+      throws IllegalArgumentException, IOException {
+    String stateCode = this.stateCodes.get(state.toLowerCase());
+    if (stateCode == null) {
+      throw new IllegalArgumentException("state does not exist");
+    }
+
+    String countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
+    if (countyCode.equals("0")) {
+      throw new IllegalArgumentException("county does not exist within state");
+    }
+    return new stateCountyCode(countyCode, stateCode);
+  }
+
+  @Override
+  public broadbandData getCountyData(stateCounty input)
+      throws IllegalArgumentException, IOException {
+    return getCountyDataFunction(input.county(), input.state());
+  }
+
+  private broadbandData getCountyDataFunction(String county, String state)
+      throws IllegalArgumentException, IOException {
+    stateCountyCode codes = this.resolveStateCounty(state, county);
+    String countyCode = codes.countyCode;
+    String stateCode = codes.stateCode;
+
     // make request
     URL requestURL =
         new URL(
@@ -33,11 +70,13 @@ public class CensusAPISource {
     List<List<String>> stateData =
         adapter.fromJson(new Buffer().readFrom(clientConnection.getInputStream()));
     // C
-    for (List<String> county : stateData) {
-      if (county.get(3).equals(countyCode)) {
-        return new broadbandData(county);
+    for (List<String> countyRow : stateData) {
+      if (countyRow.get(3).equals(countyCode)) {
+        return new broadbandData(countyRow);
       }
     }
     return null;
   }
+
+  public record stateCountyCode(String countyCode, String stateCode) {}
 }

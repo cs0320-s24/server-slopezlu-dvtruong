@@ -61,7 +61,6 @@ public class CSVDataSource {
     return publicCSV;
   }
 
-
   public Map<String, Integer> headersProxy() {
     if (publicHeaders == null) {
       this.publicHeaders = Collections.unmodifiableMap(this.headers);

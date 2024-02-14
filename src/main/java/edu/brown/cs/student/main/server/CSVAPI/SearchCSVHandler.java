@@ -14,10 +14,10 @@ import spark.Response;
 import spark.Route;
 
 public class SearchCSVHandler implements Route {
-  private final CSVDataSource data;
-  private final boolean checkLoadedCSV;
+  private CSVDataSource data;
+  private boolean checkLoadedCSV;
 
-  public SearchCSVHandler(CSVDataSource data, boolean checkLoadedCSV) {
+  public SearchCSVHandler(CSVDataSource data) {
     this.checkLoadedCSV = checkLoadedCSV;
     this.data = data;
   }
@@ -30,7 +30,7 @@ public class SearchCSVHandler implements Route {
     HashMap<String, Object> responseMap = new HashMap<>();
     String searchFor = request.queryParams("searchFor");
     String columnIdentifier = request.queryParams("columnIdentifier");
-    if (checkLoadedCSV == false) {
+    if (data.checkLoaded() == false) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);

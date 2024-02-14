@@ -23,7 +23,7 @@ public class SearchCSVHandler implements Route {
   }
 
   @Override
-  public Object handle(Request request, Response response) throws Exception {
+  public Object handle(Request request, Response response) {
     Moshi moshi = new Moshi.Builder().build();
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
@@ -31,6 +31,7 @@ public class SearchCSVHandler implements Route {
     String searchFor = request.queryParams("searchFor");
     String columnIdentifier = request.queryParams("columnIdentifier");
     String useColumnHeaders = request.queryParams("useColumnHeaders");
+    // If file was not loaded, return the appropriate response
     if (!data.checkLoaded()) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
@@ -38,14 +39,22 @@ public class SearchCSVHandler implements Route {
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please load in a file before searching");
       return adapter.toJson(responseMap);
-    } else if ((searchFor.isEmpty()) && (!useColumnHeaders.isEmpty())) {
+    }
+    // If no searchFor is provided, return appropriate response
+    else if ((searchFor.isEmpty())
+        && (!useColumnHeaders.isEmpty())
+        && (!columnIdentifier.isEmpty())) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please specify a value to search for");
       return adapter.toJson(responseMap);
-    } else if ((!searchFor.isEmpty()) && (useColumnHeaders.isEmpty())) {
+    }
+    // If no useColumnHeader is provided, return appropriate response
+    else if ((!searchFor.isEmpty())
+        && (useColumnHeaders.isEmpty())
+        && (!columnIdentifier.isEmpty())) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
@@ -76,7 +85,6 @@ public class SearchCSVHandler implements Route {
       return adapter.toJson(responseMap);
 
     } catch (IllegalArgumentException e) {
-      System.out.println("catch block runs");
       responseMap.put("result", "error_no_such_column");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);

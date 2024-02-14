@@ -48,7 +48,7 @@ public class CSVSearch {
           result.add(row);
         }
       }
-    } else if (!useColumnHeader.isEmpty()) {
+    } else {
       for (List<String> row : csvFile) {
         for (String item : row) {
           if (item.toLowerCase().contains(searchFor.toLowerCase())) {

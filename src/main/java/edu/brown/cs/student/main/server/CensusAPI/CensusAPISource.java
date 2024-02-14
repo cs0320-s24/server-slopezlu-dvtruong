@@ -23,7 +23,6 @@ public class CensusAPISource {
     HttpURLConnection clientConnection = (HttpURLConnection) urlConnection;
     clientConnection.connect();
 
-    // TODO: use the record to convert using JSON as to remove any possible errors that might occur
     Moshi moshi = new Moshi.Builder().build();
     Type listofListOfString =
         Types.newParameterizedType(
@@ -38,8 +37,6 @@ public class CensusAPISource {
         return new broadbandData(Float.parseFloat(county.get(1)));
       }
     }
-    // TODO: consider if null is the right option to return when there is nothing else to return in
-    // this situation
     return null;
   }
 }

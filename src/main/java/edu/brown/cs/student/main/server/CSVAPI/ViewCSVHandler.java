@@ -51,7 +51,7 @@ public class ViewCSVHandler implements Route {
     }
     returnData.addAll(data.proxy());
 
-    // TODO: remember to fix this later
+    // returning successful response map
     responseMap.put("result", "success");
     responseMap.put("data", returnData);
     return adapter.toJson(responseMap);

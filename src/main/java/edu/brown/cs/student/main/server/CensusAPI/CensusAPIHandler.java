@@ -39,18 +39,56 @@ public class CensusAPIHandler implements Route {
 
     String state = request.queryParams("state");
     String county = request.queryParams("county");
-    // specify more by adding more else if statements for if only one of them is null
-    if ((state == null) || (county == null)) {
+
+    // both fields are empty
+    if ((state == null) && (county == null)) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_state", state);
       responseMap.put("query_county", county);
       responseMap.put(
           "date & time of request",
           requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+      responseMap.put(
+          "message",
+          "Please input a state and county to get data for. If there are spaces in the names of either, please replace them with _");
+      return adapter.toJson(responseMap);
+      // if county is empty
+    } else if ((state != null) && (county == null)) {
+      responseMap.put("result", "error_bad_request");
+      responseMap.put("query_state", state);
+      responseMap.put("query_county", county);
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+      responseMap.put(
+          "message",
+          "Please input a county to get data for. If there are spaces in the name, please replace them with _");
+      return adapter.toJson(responseMap);
+    } else if ((state == null) && (county != null)) {
+      responseMap.put("result", "error_bad_request");
+      responseMap.put("query_state", state);
+      responseMap.put("query_county", county);
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+      responseMap.put(
+          "message",
+          "Please input a state to get data for. If there are spaces in the name, please replace them with _");
       return adapter.toJson(responseMap);
     }
 
     String stateCode = this.stateCodes.get(state.toLowerCase());
+    if (stateCode == null) {
+      responseMap.put("result", "error_bad_request");
+      responseMap.put("query_state", state);
+      responseMap.put("query_county", county);
+      responseMap.put(
+          "date & time of request",
+          requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+      responseMap.put("message", "No such state in the US.");
+      return adapter.toJson(responseMap);
+    }
+
     String countyCode = new StateCountyCodeFetcher().getCountyCode(stateCode, county);
     if (countyCode.equals("0")) {
       responseMap.put("result", "error_bad_request");
@@ -68,7 +106,7 @@ public class CensusAPIHandler implements Route {
       responseMap.put("result", "success");
       responseMap.put("state", state);
       responseMap.put("county", county);
-      responseMap.put("percentage of people that have broadband access", data.S2802_C03_022E());
+      responseMap.put("percentage of people that have broadband access", data.data());
       responseMap.put(
           "date & time of request",
           requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));

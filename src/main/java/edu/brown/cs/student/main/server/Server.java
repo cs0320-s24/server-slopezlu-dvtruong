@@ -5,6 +5,7 @@ import static spark.Spark.after;
 import edu.brown.cs.student.main.server.CSVAPI.CSVDataSource;
 import edu.brown.cs.student.main.server.CSVAPI.LoadCSVHandler;
 import edu.brown.cs.student.main.server.CSVAPI.SearchCSVHandler;
+import edu.brown.cs.student.main.server.CSVAPI.ViewCSVHandler;
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPIHandler;
 import edu.brown.cs.student.main.server.CensusAPI.StateCountyCodeFetcher;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class Server {
     Spark.get("/broadband", new CensusAPIHandler(new StateCountyCodeFetcher().getStateCodes()));
     Spark.get("/loadcsv", new LoadCSVHandler(state));
     Spark.get("/searchcsv", new SearchCSVHandler(state));
+    Spark.get("/viewcsv", new ViewCSVHandler(state));
     Spark.init();
     Spark.awaitInitialization();
   }

@@ -1,3 +1,5 @@
 package edu.brown.cs.student.main.server.CensusAPI;
 
-public record broadbandData(float data) {}
+import java.util.List;
+
+public record broadbandData(List<String> data) {}

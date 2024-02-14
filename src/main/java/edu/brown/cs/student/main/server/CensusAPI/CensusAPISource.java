@@ -35,7 +35,7 @@ public class CensusAPISource {
     // C
     for (List<String> county : stateData) {
       if (county.get(3).equals(countyCode)) {
-        return new broadbandData(Float.parseFloat(county.get(1)));
+        return new broadbandData(county);
       }
     }
     return null;

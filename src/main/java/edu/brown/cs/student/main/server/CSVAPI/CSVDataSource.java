@@ -39,13 +39,7 @@ public class CSVDataSource {
     if (headersOrNot) {
       int i = 0;
       for (String item : rowArray) {
-        this.headers.put(item, i);
-        i++;
-      }
-    } else {
-      int i = 0;
-      for (String item : rowArray) {
-        this.headers.put(Integer.toString(i), i);
+        this.headers.put(item.replace(" ", "_"), i);
         i++;
       }
     }

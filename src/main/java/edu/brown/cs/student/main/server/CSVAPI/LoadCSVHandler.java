@@ -14,7 +14,7 @@ import spark.Response;
 import spark.Route;
 
 public class LoadCSVHandler implements Route {
-  private final CSVDataSource data;
+  private CSVDataSource data;
 
   public LoadCSVHandler(CSVDataSource data) {
     this.data = data;

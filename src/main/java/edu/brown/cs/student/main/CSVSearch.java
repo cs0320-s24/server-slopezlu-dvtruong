@@ -23,6 +23,7 @@ public class CSVSearch {
    * @throws FileNotFoundException if the file doesn't exist
    * @throws IOException if there was another error when trying to read/parse the CSV file
    * @throws FactoryFailureException if the number of rows in consistent
+   * //TODO: add useColumnIdentifier
    */
   public List<List<String>> search(
       List<List<String>> csvFile,

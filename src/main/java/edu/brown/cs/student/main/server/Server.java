@@ -26,7 +26,7 @@ public class Server {
         });
     Spark.get("/broadband", new CensusAPIHandler(new StateCountyCodeFetcher().getStateCodes()));
     Spark.get("/loadcsv", new LoadCSVHandler(state));
-    Spark.get("/searchcsv", new SearchCSVHandler(state, state.checkLoaded()));
+    Spark.get("/searchcsv", new SearchCSVHandler(state));
     Spark.init();
     Spark.awaitInitialization();
   }

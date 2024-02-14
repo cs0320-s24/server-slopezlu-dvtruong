@@ -27,21 +27,27 @@ public class CSVSearch {
   public List<List<String>> search(
       List<List<String>> csvFile,
       Map<String, Integer> headers,
+      String useColumnHeader,
       String searchFor,
       String columnIdentifier)
       throws IllegalArgumentException {
     // search
     List<List<String>> result = new ArrayList<>();
-
-    if (columnIdentifier != null) {
+    if (useColumnHeader.equals("true") && !columnIdentifier.isEmpty()) {
       int columnToLookAt = headers.get(columnIdentifier);
       for (List<String> row : csvFile) {
         if (row.get(columnToLookAt).toLowerCase().contains(searchFor.toLowerCase())) {
           result.add(row);
         }
       }
-      return result;
-    } else {
+    } else if (useColumnHeader.equals("false") && !columnIdentifier.isEmpty()) {
+      int columnToLookAt = Integer.parseInt(columnIdentifier);
+      for (List<String> row : csvFile) {
+        if (row.get(columnToLookAt).toLowerCase().contains(searchFor.toLowerCase())) {
+          result.add(row);
+        }
+      }
+    } else if (!useColumnHeader.isEmpty()) {
       for (List<String> row : csvFile) {
         for (String item : row) {
           if (item.toLowerCase().contains(searchFor.toLowerCase())) {
@@ -49,7 +55,7 @@ public class CSVSearch {
           }
         }
       }
-      return result;
     }
+    return result;
   }
 }

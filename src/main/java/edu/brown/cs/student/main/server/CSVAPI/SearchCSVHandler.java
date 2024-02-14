@@ -30,17 +30,27 @@ public class SearchCSVHandler implements Route {
     HashMap<String, Object> responseMap = new HashMap<>();
     String searchFor = request.queryParams("searchFor");
     String columnIdentifier = request.queryParams("columnIdentifier");
-    if (data.checkLoaded() == false) {
+    String useColumnHeaders = request.queryParams("useColumnHeaders");
+    if (!data.checkLoaded()) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
+      responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please load in a file before searching");
       return adapter.toJson(responseMap);
-    } else if ((searchFor == null) && (columnIdentifier != null)) {
+    } else if ((searchFor.isEmpty()) && (!useColumnHeaders.isEmpty())) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
+      responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please specify a value to search for");
+      return adapter.toJson(responseMap);
+    } else if ((!searchFor.isEmpty()) && (useColumnHeaders.isEmpty())) {
+      responseMap.put("result", "error_bad_request");
+      responseMap.put("query_searchFor", searchFor);
+      responseMap.put("query_columnIdentifier", columnIdentifier);
+      responseMap.put("query_useColumnHeaders", useColumnHeaders);
+      responseMap.put("message", "please specify whether to use column headers or not");
       return adapter.toJson(responseMap);
     }
     try {
@@ -48,15 +58,30 @@ public class SearchCSVHandler implements Route {
       responseMap.put("result", "success");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
+      responseMap.put("query_useColumnHeaders", useColumnHeaders);
+      Type listListString =
+          Types.newParameterizedType(
+              List.class, Types.newParameterizedType(List.class, String.class));
+      JsonAdapter<List<List<String>>> searchAdapter = moshi.adapter(listListString);
       responseMap.put(
-          "data", searcher.search(data.proxy(), data.headerProxy(), searchFor, columnIdentifier));
+          "data",
+          searchAdapter.toJson(
+              searcher.search(
+                  data.proxy(),
+                  data.headerProxy(),
+                  useColumnHeaders,
+                  searchFor,
+                  columnIdentifier)));
       responseMap.put("message", "successfully performed a search");
       return adapter.toJson(responseMap);
     } catch (IllegalArgumentException e) {
-      responseMap.put("result", "error_no_such_column_name");
+      responseMap.put("result", "error_no_such_column");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
-      if (data.headersOrNot() == true) {
+      responseMap.put("query_useColumnHeaders", useColumnHeaders);
+      //am i doing this right??
+      if (useColumnHeaders.equals("true")) {
+        System.out.println("true is running");
         List<String> availableHeaders = new ArrayList<>();
         for (String key : data.headerProxy().keySet()) {
           availableHeaders.add(key);
@@ -65,18 +90,20 @@ public class SearchCSVHandler implements Route {
             "message",
             "column "
                 + columnIdentifier
-                + "was not found. The following column headers are available: "
+                + " was not found. The following column headers are available: "
                 + availableHeaders);
-      } else {
-        List<String> indices = new ArrayList<>();
-        for (String key : data.headerProxy().keySet()) {
-          indices.add(key);
+      } else if (useColumnHeaders.equals("false")) {
+        System.out.println("false is running");
+        List<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < data.headerProxy().keySet().size(); i++) {
+          indices.add(i);
         }
+
         responseMap.put(
             "message",
             "column "
                 + columnIdentifier
-                + "was not found. The following column indices are available: "
+                + " was not found. The following column indices are available: "
                 + indices);
       }
       return adapter.toJson(responseMap);

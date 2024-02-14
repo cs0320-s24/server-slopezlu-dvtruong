@@ -51,15 +51,9 @@ public class ViewCSVHandler implements Route {
     }
     returnData.addAll(data.proxy());
 
-    // adapter for the data
-    Type listListStringObject =
-        Types.newParameterizedType(
-            List.class, Types.newParameterizedType(List.class, String.class));
-    JsonAdapter<List<List<String>>> dataAdapter = moshi.adapter(listListStringObject);
-
     // TODO: remember to fix this later
     responseMap.put("result", "success");
-    responseMap.put("data", dataAdapter.toJson(returnData));
+    responseMap.put("data", returnData);
     return adapter.toJson(responseMap);
   }
 }

@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -74,6 +76,17 @@ public class CensusAPIHandler implements Route {
     }
     try {
       broadbandData data = this.dataSource.getCountyData(new stateCounty(state, county));
+      if (data == null) {
+        responseMap.put("result", "success");
+        responseMap.put("state", state);
+        responseMap.put("county", county);
+        responseMap.put("data", "no data found for county");
+        responseMap.put(
+                "date & time of request",
+                requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return adapter.toJson(responseMap);
+
+      }
       responseMap.put("result", "success");
       responseMap.put("state", state);
       responseMap.put("county", county);

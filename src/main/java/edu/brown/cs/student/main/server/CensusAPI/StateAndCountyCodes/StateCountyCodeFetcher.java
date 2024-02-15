@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.server.CensusAPI;
+package edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;

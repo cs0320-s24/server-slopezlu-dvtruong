@@ -1,7 +1,8 @@
-package edu.brown.cs.student.main.Parser;
+package edu.brown.cs.student.main.server.CSVAPI.Parser;
 
-import edu.brown.cs.student.main.Parser.Creator.CreatorFromRow;
-import edu.brown.cs.student.main.Parser.Creator.FactoryFailureException;
+import edu.brown.cs.student.main.server.CSVAPI.Parser.Creator.CreatorFromRow;
+import edu.brown.cs.student.main.server.CSVAPI.Parser.Creator.FactoryFailureException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.Parser.Creator.ExampleCreators;
+package edu.brown.cs.student.main.server.CSVAPI.Parser.Creator.ExampleCreators;
 
 /** This class is an example used in PersonCreator. */
 public class Person {

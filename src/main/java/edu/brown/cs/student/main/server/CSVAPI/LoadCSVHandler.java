@@ -3,7 +3,7 @@ package edu.brown.cs.student.main.server.CSVAPI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import edu.brown.cs.student.main.Parser.Creator.FactoryFailureException;
+import edu.brown.cs.student.main.server.CSVAPI.Parser.Creator.FactoryFailureException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -33,6 +33,8 @@ public class LoadCSVHandler implements Route {
     String filePathRestricted = "data/" + filename;
     String headers = request.queryParams("headers");
 
+    // errors that may occur when a parameter as specified above is empty or when both of them are
+    // empty
     if ((filename == null) && (headers != null)) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_filepath", filename);
@@ -104,6 +106,5 @@ public class LoadCSVHandler implements Route {
       return adapter.toJson(responseMap);
     }
 
-    // also look on how you can make the Parser more robust
   }
 }

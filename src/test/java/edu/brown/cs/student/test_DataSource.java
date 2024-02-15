@@ -2,7 +2,7 @@ package edu.brown.cs.student;
 
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPISource;
 import edu.brown.cs.student.main.server.CensusAPI.broadbandData;
-import edu.brown.cs.student.main.server.CensusAPI.stateCounty;
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;

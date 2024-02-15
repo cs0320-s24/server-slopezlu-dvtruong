@@ -10,6 +10,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.StateCountyCodeFetcher;
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import okio.Buffer;
 
 public class CensusAPISource implements BroadbandDataSource {

@@ -1,6 +1,6 @@
 package edu.brown.cs.student;
 
-import edu.brown.cs.student.main.server.CensusAPI.StateCountyCodeFetcher;
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.StateCountyCodeFetcher;
 import java.io.IOException;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

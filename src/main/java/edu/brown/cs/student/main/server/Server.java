@@ -41,7 +41,7 @@ public class Server {
   public static void main(String[] args) {
     try {
       Server server =
-          new Server(new CSVDataSource(), new CensusDataSourceCache(new CensusAPISource()));
+          new Server(new CSVDataSource(), new CensusDataSourceCache(new CensusAPISource(), 5, 1));
     } catch (IOException e) {
       System.out.println("error occurred when trying to fetch state codes");
     }

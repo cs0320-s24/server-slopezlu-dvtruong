@@ -1,4 +1,4 @@
-package edu.brown.cs.student.test_Codes;
+package edu.brown.cs.student;
 
 import edu.brown.cs.student.main.server.CensusAPI.StateCountyCodeFetcher;
 import java.io.IOException;

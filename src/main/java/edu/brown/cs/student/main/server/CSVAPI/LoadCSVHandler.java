@@ -29,31 +29,27 @@ public class LoadCSVHandler implements Route {
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
     HashMap<String, Object> responseMap = new HashMap<>();
 
-    String filepath = request.queryParams("filepath");
+    String filename = request.queryParams("filename");
+    String filePathRestricted = "data/" + filename;
     String headers = request.queryParams("headers");
 
-    // handle it as usual and make sure to put the responseMaps as according to the exceptions that
-    // might be thrown from CSVParser
-
-    // errors that may occur when a parameter as specified above is empty or when both of them are
-    // empty
-    if ((filepath == null) && (headers != null)) {
+    if ((filename == null) && (headers != null)) {
       responseMap.put("result", "error_bad_request");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
-      responseMap.put("message", "please input a filepath");
+      responseMap.put("message", "please input a file name in the data directory");
       return adapter.toJson(responseMap);
-    } else if ((filepath != null) && (headers == null)) {
+    } else if ((filename != null) && (headers == null)) {
       responseMap.put("result", "error_bad_request");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
       responseMap.put(
           "message",
           "please indicate whether the CSV has headers by typing/inputting true or false into the headers param");
       return adapter.toJson(responseMap);
-    } else if ((filepath == null) && (headers == null)) {
+    } else if ((filename == null) && (headers == null)) {
       responseMap.put("result", "error_bad_request");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
       responseMap.put(
           "message",
@@ -70,7 +66,7 @@ public class LoadCSVHandler implements Route {
     // this is for what happens when having headers in the csv is not indicated within the request
     if (headersOrNot == null) {
       responseMap.put("result", "error_bad_request");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
       responseMap.put(
           "message",
@@ -79,28 +75,28 @@ public class LoadCSVHandler implements Route {
     }
 
     try {
-      data.load(filepath, headersOrNot);
+      data.load(filePathRestricted, headersOrNot);
       responseMap.put("result", "success");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
       responseMap.put("message", "file successfully loaded");
       return adapter.toJson(responseMap);
     } catch (FileNotFoundException e) {
       responseMap.put("result", "error_datasource");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
-      responseMap.put("message", "the file corresponding to the inputted filepath cannot be found");
+      responseMap.put("message", "the file does not exist in dat");
       return adapter.toJson(responseMap);
     } catch (IOException e) {
       responseMap.put("result", "error_cannot_parse");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
       responseMap.put(
           "message", "there was an error that occurred while trying to parse the CSV file");
       return adapter.toJson(responseMap);
     } catch (FactoryFailureException e) {
       responseMap.put("result", "error_cannot_parse");
-      responseMap.put("query_filepath", filepath);
+      responseMap.put("query_filepath", filename);
       responseMap.put("query_headers", headers);
       responseMap.put(
           "message",

@@ -63,8 +63,8 @@ public class CensusDataSourceCache implements BroadbandDataSource {
                     }
                   });
     }
-    if(cacheSize < 0 || timeDuration < 0){
-        throw new IllegalArgumentException("Please enter a positive value");
+    if (cacheSize < 0 || timeDuration < 0) {
+      throw new IllegalArgumentException("Please enter a positive value");
     }
   }
 

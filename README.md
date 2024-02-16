@@ -1,13 +1,26 @@
 > **GETTING STARTED:** You must start from some combination of the CSV Sprint code that you and your partner ended up with. Please move your code directly into this repository so that the `pom.xml`, `/src` folder, etc, are all at this base directory.
 
-> **IMPORTANT NOTE**: In order to run the server, run `mvn package` in your terminal then `./run` (using Git Bash for Windows users). This will be the same as the first Sprint. Take notice when transferring this run sprint to your Sprint 2 implementation that the path of your Server class matches the path specified in the run script. Currently, it is set to execute Server at `edu/brown/cs/student/main/server/Server`. Running through terminal will save a lot of computer resources (IntelliJ is pretty intensive!) in future sprints.
-
 # Project Details
-
+Project Name: Server \
+Team Members: Saul Lopez Lucas (slopezlu), Derek Truong (dvtruong)\
+Estimated Project Completion Time: 24+ Hours
+Link: https://github.com/cs0320-s24/server-slopezlu-dvtruong
 # Design Choices
-
+To connect successfully to an API endpoint, we implemented handler classes for managing requests, extracting query parameters, and generating JSON responses for web display. These handlers also manage errors—returning specific codes for missing or invalid inputs to prevent unhelpful 500 Internal Server Error messages, which helps enhance user experience.\
+For CSV operations like loading, viewing, and searching, we developed the CSVDataSource class for parsing and storing file content. It includes methods to verify data loading and to provide immutable views of CSV data and headers, which helps ensure data integrity. The .checkLoaded() method is important for processing operations, in that it ensures files are loaded before viewing or searching, helping guide users through the correct process flow.\
+Additionally, we created a handler for ACS Census API requests, which fetches household broadband access data based on valid query parameters using the getCounty() method in CensusAPISource. For efficient data handling, we used a record to encapsulate broadband data as a list of strings. The StateCountyCodeFetcher modularized the code responsible for the retrieval of valid state and county codes.\
+We used a BroadbandDatsource interface to allow the developer to choose if they want to use the cache or not. If they do not want to use it, they can create an instance of CensusAPISource and pass it into the Server parameter. If they do, they can create an instance of the CensusDataSourceCache instead. Cache parameters like size and time duration are customizable, providing developers with control over cache behavior.
+  
 # Errors/Bugs
 
 # Tests
-
+* To ensure that the server behaves as expected, we performed various integration tests that cover scenarios like successful request handling, error handling for malformed requests, and several edge cases. In addition to that, we also formed various unit tests to ensure that the helper methods, such as those used in CensusAPI Source, like getCountyData(), also worked correctly under several conditions.
+*  **TestCSVAPI Suite**
+    * To ensure that the server functions properly when routing to the `loadcsv`, `viewcsv`, and `searchcsv` endpoints, we created integration tests for the `LoadCSVHandler`, `SearchCSVHandler`, and `ViewCSVHandler` classes. For the `LoadCSVHandler` class, we tested that a successful request could be made, the type of `result` message that would be produced if given invalid parameters, or no parameters at all. These tests covered different scenarios that the endpoint might encounter during operation, helping us make the server more robust in turn. The integration tests for `ViewCSVHandler` and `SearchCSVHandler` also tested that a successful request could be made, and the type of `result` that would be produced if given invalid inputs or missing inputs. In the `TestCSVAPI` suite, we also performed unit tests for the CSVDataSource class, to ensure that the load(), checkLoaded(), proxy(), and headesProxy() worked properly.  
+*  **TestCensusAPI Suite**
+    * To ensure that the server functions properly when routing to the `broadband` endpoint, we created integrations tests that check that a successful request could be made, the type of `message` that would be produced if the request had missing query parameters, and if the state and county specified do not exist. We also tested the CensusAPISource to ensure that the helper methods, like .getCountyData() produced the expected outputs.
 # How to
+*  **Run Program**
+    * In order to run the server, run `mvn package` in the terminal, followed by `./run`. To know that the server was successfully started, a message will appear in the terminal, saying that the server is running. You can now navigate to a browser and type `http:localhost:3232/`, followed by the specific API endpoint you wish to use. Depending on the endpoint, you will be required to input different parameters. For example, using the `/loadcsv` endpoint will require you to input a filepath and whether the file has headers. If you do not provide the correct query parameters, you will receive an appropriate message. A valid URL that would route to the `\loadcsv` endpoint is `http://localhost:3232/loadcsv?filepath=dol_ri_earnings_disparity.csv&headers=true`
+* **Run Tests**
+  * In order to run the tests provided, running `mvn package` in the terminal will tell you how many tests were run, if they were successful, and from what class the tests are from. If you want to run and individual test provided in the test classes, then you can simply press the `play` button near the test itself.

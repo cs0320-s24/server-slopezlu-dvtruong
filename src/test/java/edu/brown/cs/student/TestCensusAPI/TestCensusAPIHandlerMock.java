@@ -21,10 +21,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testng.annotations.BeforeClass;
 import spark.Spark;
+
 
 /**
  * Tests for the CensusAPIHandler on a mock data source
@@ -33,7 +34,7 @@ public class TestCensusAPIHandlerMock {
   /**
    * sets up the server on a port
    */
-  @BeforeAll
+  @BeforeClass
   public static void setupBeforeAll() {
     Spark.port(0);
     Logger.getLogger("").setLevel(Level.WARNING);

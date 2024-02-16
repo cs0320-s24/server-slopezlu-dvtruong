@@ -32,7 +32,7 @@ public class SearchCSVHandler implements Route {
   public SearchCSVHandler(CSVDataSource data) {
     this.data = data;
   }
-
+  // handles the request to searchcsv endpoint
   @Override
   public Object handle(Request request, Response response) {
     Moshi moshi = new Moshi.Builder().build();

@@ -52,7 +52,11 @@ public class CensusAPISource implements BroadbandDataSource {
    */
   private stateCountyCode resolveStateCounty(String state, String county)
       throws IllegalArgumentException, IOException {
-    String stateCode = this.stateCodes.get(state.toLowerCase());
+    String stateCode = null;
+    if(state != null){
+      stateCode = this.stateCodes.get(state.toLowerCase());
+    }
+
     if (stateCode == null) {
       throw new IllegalArgumentException("state does not exist");
     }

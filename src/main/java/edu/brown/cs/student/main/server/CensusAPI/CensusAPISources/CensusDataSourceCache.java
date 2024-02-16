@@ -101,13 +101,13 @@ public class CensusDataSourceCache implements BroadbandDataSource {
    *     percentage of people with broadband access, and the state and county codes
    */
   @Override
-  public broadbandData getCountyData(stateCounty input) {
+  public broadbandData getCountyData(stateCounty input){
     broadbandData result = cache.getUnchecked(input);
     System.out.println(cache.stats());
     return result;
   }
 
   public CacheStats getStats() {
-      return cache.stats();
+    return cache.stats();
   }
 }

@@ -15,13 +15,26 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * Class for the handler of "/broadband" in the server that accepts the parameters "state" and "county"
+ */
 public class CensusAPIHandler implements Route {
   private BroadbandDataSource dataSource;
 
+  /**
+   * Constructor for the CensusAPI handler that also houses a dataSource to use
+   * @param dataSource the dataSource to use
+   */
   public CensusAPIHandler(BroadbandDataSource dataSource) {
     this.dataSource = dataSource;
   }
 
+  /**
+   * The main method of this class that crafts responses and returns them to the user
+   * @param request the request to be formed for the data source
+   * @param response
+   * @return a JSON that states whether the function was successful and any following data if it is successful
+   */
   @Override
   public Object handle(Request request, Response response) throws Exception {
     Moshi moshi = new Moshi.Builder().build();

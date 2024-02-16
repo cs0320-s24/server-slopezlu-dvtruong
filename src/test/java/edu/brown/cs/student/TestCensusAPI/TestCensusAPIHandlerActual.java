@@ -1,21 +1,17 @@
-package edu.brown.cs.student;
+package edu.brown.cs.student.TestCensusAPI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-import edu.brown.cs.student.MockSources.MockCensusAPISource;
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPIHandler;
-import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.BroadbandDataSource;
+import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.CensusAPISource;
 import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
-import edu.brown.cs.student.main.server.CensusAPI.broadbandData;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +22,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import spark.Spark;
 
-public class TestCensusAPIHandler {
+/**
+ * Testing the CensusAPIHandler on the actual Census API
+ */
+public class TestCensusAPIHandlerActual {
+  /**
+   * setup the server on a port
+   */
   @BeforeAll
   public static void setupBeforeAll() {
     Spark.port(0);
@@ -37,30 +39,33 @@ public class TestCensusAPIHandler {
       Types.newParameterizedType(Map.class, String.class, Object.class);
   private JsonAdapter<Map<String, Object>> adapter;
 
+  /**
+   * sets up the server to accept "/broadband" and builds the adapter to assert tests on the responses
+   */
   @BeforeEach
   public void setup() {
-    List<broadbandData> mockData = new ArrayList<>();
-    broadbandData miamiData =
-        new broadbandData(new ArrayList<>(List.of("miami", "90.2", "florida")));
-    broadbandData middlesexData =
-        new broadbandData(new ArrayList<>(List.of("middlesex", "80.2", "new_jersey")));
-    mockData.add(miamiData);
-    mockData.add(middlesexData);
-
-    BroadbandDataSource mockedSource = new MockCensusAPISource(mockData);
-    Spark.get("/broadband", new CensusAPIHandler(mockedSource));
+    Spark.get("/broadband", new CensusAPIHandler(new CensusAPISource()));
     Spark.awaitInitialization();
 
     Moshi moshi = new Moshi.Builder().build();
     adapter = moshi.adapter(mapStringObject);
   }
 
+  /**
+   * gracefully shuts down the server
+   */
   @AfterEach
   public void teardown() {
     Spark.unmap("/broadband");
     Spark.awaitStop();
   }
 
+  /**
+   * method that constructs the request to the server
+   * @param toRequest the state and county to request data for
+   * @return a connnection that holds the response from the server
+   * @throws IOException if the connection to the server cannot be established for some reason
+   */
   private HttpURLConnection tryRequest(stateCounty toRequest) throws IOException {
     URL requestURL =
         new URL(
@@ -92,26 +97,24 @@ public class TestCensusAPIHandler {
     return clientConnection;
   }
 
+  /**
+   * Tests for when there are successful requests
+   * @throws IOException if connection to server cannot be established
+   */
   @Test
-  public void testBroadbandRequestSuccessful() throws IOException {
-    HttpURLConnection miamiConnection = tryRequest(new stateCounty("florida", "miami"));
-    assertEquals(200, miamiConnection.getResponseCode());
-    Map<String, Object> miamiResponseBody =
-        adapter.fromJson(new Buffer().readFrom(miamiConnection.getInputStream()));
-    assertEquals("success", miamiResponseBody.get("result"));
-    assertEquals("90.2", miamiResponseBody.get("percentage of people that have broadband access"));
-    miamiConnection.disconnect();
-
-    // looking for the other item in the list for the data
-    HttpURLConnection middlesexConnection = tryRequest(new stateCounty("new_jersey", "middlesex"));
-    Map<String, Object> middlesexResponseBody =
-        adapter.fromJson(new Buffer().readFrom(middlesexConnection.getInputStream()));
-    assertEquals(200, middlesexConnection.getResponseCode());
-    assertEquals(
-        "80.2", middlesexResponseBody.get("percentage of people that have broadband access"));
-    middlesexConnection.disconnect();
+  public void testBroadbandSuccessfulRequest() throws IOException {
+    HttpURLConnection kingsConnection = tryRequest(new stateCounty("California", "Kings_County"));
+    assertEquals(200, kingsConnection.getResponseCode());
+    Map<String, Object> kingsResponseBody =
+        adapter.fromJson(new Buffer().readFrom(kingsConnection.getInputStream()));
+    assertEquals("success", kingsResponseBody.get("result"));
+    assertEquals("83.5", kingsResponseBody.get("percentage of people that have broadband access"));
   }
 
+  /**
+   * Tests for when there are missing fields (null) within the request
+   * @throws IOException if connection to server cannot be established
+   */
   @Test
   public void testBroadbandRequestFailMissingFields() throws IOException {
     // both fields
@@ -147,6 +150,10 @@ public class TestCensusAPIHandler {
         missingCountyResponseBody.get("message"));
   }
 
+  /**
+   * Tests for when the state/county combination that is requested doesn't exist
+   * @throws IOException if connection to server cannot be established for some reason
+   */
   @Test
   public void testStateCountyNotExistant() throws IOException {
     HttpURLConnection loadConnection = tryRequest(new stateCounty("some", "some"));

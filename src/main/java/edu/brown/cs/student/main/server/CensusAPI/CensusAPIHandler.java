@@ -3,6 +3,7 @@ package edu.brown.cs.student.main.server.CensusAPI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.BroadbandDataSource;
 import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -94,7 +95,7 @@ public class CensusAPIHandler implements Route {
           requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
       return adapter.toJson(responseMap);
     } catch (IllegalArgumentException e) {
-      responseMap.put("result", "error_datasource");
+      responseMap.put("result", "error_bad_request");
       responseMap.put("query_state", state);
       responseMap.put("query_county", county);
       responseMap.put(

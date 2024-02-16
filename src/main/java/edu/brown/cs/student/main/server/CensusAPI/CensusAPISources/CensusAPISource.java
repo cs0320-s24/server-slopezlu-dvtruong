@@ -1,10 +1,11 @@
-package edu.brown.cs.student.main.server.CensusAPI;
+package edu.brown.cs.student.main.server.CensusAPI.CensusAPISources;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
 import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.StateCountyCodeFetcher;
 import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
+import edu.brown.cs.student.main.server.CensusAPI.broadbandData;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;

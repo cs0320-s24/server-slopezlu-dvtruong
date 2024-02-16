@@ -28,7 +28,7 @@ public class CSVDataSource {
      */
     this.csv = null;
   }
-
+  // loads a file using filename and headersOrNot provided
   public void load(String filename, boolean headersOrNot)
       throws IOException, FactoryFailureException {
     final Pattern regexSplitCSVRow =
@@ -50,18 +50,18 @@ public class CSVDataSource {
                 new FileReader(filename), new ListofStringCreator(rowArray.length), headersOrNot)
             .parse();
   }
-
+  // checks if a file was successfully loaded
   public boolean checkLoaded() {
     return this.csv != null;
   }
-
+  // creates a proxy of the CSV data
   public List<List<String>> proxy() {
     if (publicCSV == null) {
       this.publicCSV = Collections.unmodifiableList(this.csv);
     }
     return publicCSV;
   }
-
+  // creates a proxy of the headers map
   public Map<String, Integer> headersProxy() {
     if (publicHeaders == null) {
       this.publicHeaders = Collections.unmodifiableMap(this.headers);

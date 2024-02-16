@@ -28,7 +28,7 @@ public class LoadCSVHandler implements Route {
   public LoadCSVHandler(CSVDataSource data) {
     this.data = data;
   }
-
+  // handles the request to loadcsv endpoint
   @Override
   public Object handle(Request request, Response response) {
     Moshi moshi = new Moshi.Builder().build();

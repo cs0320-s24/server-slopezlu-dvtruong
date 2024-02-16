@@ -3,7 +3,6 @@ package edu.brown.cs.student.main.server.CSVAPI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +32,7 @@ public class SearchCSVHandler implements Route {
     String useColumnHeaders = request.queryParams("useColumnHeaders");
     // If file was not loaded, return the appropriate response
     if (!data.checkLoaded()) {
-      responseMap.put("result", "error_bad_request");
+      responseMap.put("result", "error_datasource");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
@@ -41,9 +40,7 @@ public class SearchCSVHandler implements Route {
       return adapter.toJson(responseMap);
     }
     // If no searchFor is provided, return appropriate response
-    else if ((searchFor.isEmpty())
-        && (!useColumnHeaders.isEmpty())
-        && (!columnIdentifier.isEmpty())) {
+    else if ((searchFor.isEmpty())) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
@@ -60,6 +57,14 @@ public class SearchCSVHandler implements Route {
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please specify whether to use column headers or not");
+      return adapter.toJson(responseMap);
+    }
+    else if(!useColumnHeaders.equals("true") || !useColumnHeaders.equals("false")){
+      responseMap.put("result", "error_bad_request");
+      responseMap.put("query_searchFor", searchFor);
+      responseMap.put("query_columnIdentifier", columnIdentifier);
+      responseMap.put("query_useColumnHeaders", useColumnHeaders);
+      responseMap.put("message", "please enter either 'true' or 'false' for the useColumnHeader parameter");
       return adapter.toJson(responseMap);
     }
     try {

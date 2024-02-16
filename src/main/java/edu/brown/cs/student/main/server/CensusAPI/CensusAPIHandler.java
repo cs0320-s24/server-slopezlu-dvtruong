@@ -3,14 +3,13 @@ package edu.brown.cs.student.main.server.CensusAPI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-
-import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -82,10 +81,9 @@ public class CensusAPIHandler implements Route {
         responseMap.put("county", county);
         responseMap.put("data", "no data found for county");
         responseMap.put(
-                "date & time of request",
-                requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            "date & time of request",
+            requestTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return adapter.toJson(responseMap);
-
       }
       responseMap.put("result", "success");
       responseMap.put("state", state);

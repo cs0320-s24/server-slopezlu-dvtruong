@@ -3,6 +3,8 @@ package edu.brown.cs.student.main.server.CensusAPI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.StateCountyCodeFetcher;
+import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -10,9 +12,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
-
-import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.StateCountyCodeFetcher;
-import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import okio.Buffer;
 
 public class CensusAPISource implements BroadbandDataSource {

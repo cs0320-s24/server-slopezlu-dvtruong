@@ -73,17 +73,15 @@ public class TestCensusAPIHandler {
 
     if (toRequest.county() == null) {
       if (toRequest.state() == null) {
-        requestURL= new URL(
-                "http://localhost:"
-                        + Spark.port()
-                        + "/broadband?");
+        requestURL = new URL("http://localhost:" + Spark.port() + "/broadband?");
       } else {
-        requestURL = new URL("http://localhost:" + Spark.port() + "/broadband?state=" + toRequest.state());
+        requestURL =
+            new URL("http://localhost:" + Spark.port() + "/broadband?state=" + toRequest.state());
       }
     } else if ((toRequest.county() != null) && (toRequest.state() == null)) {
-      requestURL = new URL("http://localhost:" + Spark.port() + "/broadband?county=" + toRequest.county());
+      requestURL =
+          new URL("http://localhost:" + Spark.port() + "/broadband?county=" + toRequest.county());
     }
-
 
     HttpURLConnection clientConnection = (HttpURLConnection) requestURL.openConnection();
 
@@ -116,36 +114,45 @@ public class TestCensusAPIHandler {
 
   @Test
   public void testBroadbandRequestFailMissingFields() throws IOException {
-    //both fields
+    // both fields
     HttpURLConnection missingBothConnection = tryRequest(new stateCounty(null, null));
     assertEquals(200, missingBothConnection.getResponseCode());
-    Map<String, Object> missingBothResponseBody = adapter.fromJson(new Buffer().readFrom(missingBothConnection.getInputStream()));
+    Map<String, Object> missingBothResponseBody =
+        adapter.fromJson(new Buffer().readFrom(missingBothConnection.getInputStream()));
     assertEquals("error_bad_request", missingBothResponseBody.get("result"));
-    assertEquals("Please input a state and county to get data for. If there are spaces in the names of either, please replace them with _", missingBothResponseBody.get("message"));
+    assertEquals(
+        "Please input a state and county to get data for. If there are spaces in the names of either, please replace them with _",
+        missingBothResponseBody.get("message"));
     missingBothConnection.disconnect();
 
-    //missing states fields
-    HttpURLConnection missingStatesConnection = tryRequest(new stateCounty(null,
-   "some_county"));
+    // missing states fields
+    HttpURLConnection missingStatesConnection = tryRequest(new stateCounty(null, "some_county"));
     assertEquals(200, missingStatesConnection.getResponseCode());
-    Map<String, Object> missingStatesResponseBody = adapter.fromJson(new Buffer().readFrom(missingStatesConnection.getInputStream()));
+    Map<String, Object> missingStatesResponseBody =
+        adapter.fromJson(new Buffer().readFrom(missingStatesConnection.getInputStream()));
     assertEquals("error_bad_request", missingStatesResponseBody.get("result"));
-    assertEquals("Please input a state to get data for. If there are spaces in the name, please replace them with _", missingStatesResponseBody.get("message"));
+    assertEquals(
+        "Please input a state to get data for. If there are spaces in the name, please replace them with _",
+        missingStatesResponseBody.get("message"));
     missingStatesConnection.disconnect();
 
-    //missing county fields
+    // missing county fields
     HttpURLConnection missingCountyConnection = tryRequest(new stateCounty("some_state", null));
     assertEquals(200, missingCountyConnection.getResponseCode());
-    Map<String, Object> missingCountyResponseBody = adapter.fromJson(new Buffer().readFrom(missingCountyConnection.getInputStream()));
+    Map<String, Object> missingCountyResponseBody =
+        adapter.fromJson(new Buffer().readFrom(missingCountyConnection.getInputStream()));
     assertEquals("error_bad_request", missingCountyResponseBody.get("result"));
-    assertEquals("Please input a county to get data for. If there are spaces in the name, please replace them with _", missingCountyResponseBody.get("message"));
+    assertEquals(
+        "Please input a county to get data for. If there are spaces in the name, please replace them with _",
+        missingCountyResponseBody.get("message"));
   }
 
   @Test
   public void testStateCountyNotExistant() throws IOException {
     HttpURLConnection loadConnection = tryRequest(new stateCounty("some", "some"));
     assertEquals(200, loadConnection.getResponseCode());
-    Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
+    Map<String, Object> responseBody =
+        adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
     assertEquals("error_bad_request", responseBody.get("result"));
     assertEquals("state/county combination doesn't exist", responseBody.get("message"));
   }

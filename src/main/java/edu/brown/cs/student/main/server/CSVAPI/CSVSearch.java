@@ -17,7 +17,6 @@ public class CSVSearch {
    * @param useColumnHeader a boolean indicating whether to use the headers or to use column index
    *     or none
    * @return a List of List of Strings that contain the appropriate rows for the search
-   * @throws IllegalArgumentException if the column identifier does not exist in the map
    */
   public List<List<String>> search(
       List<List<String>> csvFile,

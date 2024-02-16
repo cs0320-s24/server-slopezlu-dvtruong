@@ -13,7 +13,16 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/** Class responsible for handling HTTP requests to CSV API server to load CSV files * */
 public class LoadCSVHandler implements Route {
+  /**
+   * Processes HTTP requests to load CSV data and produces a response in JSON format with the result
+   * of the request, indicating whether it was successful or not, the query parameters, and a
+   * message providing more info on errors. Handler ensures that the query parameters are valid,
+   * otherwise returns appropriate response
+   *
+   * @param CSVDataSource Data source for loadcsv functionality *
+   */
   private CSVDataSource data;
 
   public LoadCSVHandler(CSVDataSource data) {
@@ -21,10 +30,9 @@ public class LoadCSVHandler implements Route {
   }
 
   @Override
-  public Object handle(Request request, Response response) throws Exception {
+  public Object handle(Request request, Response response) {
     Moshi moshi = new Moshi.Builder().build();
 
-    // For the response map
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
     HashMap<String, Object> responseMap = new HashMap<>();
@@ -33,8 +41,6 @@ public class LoadCSVHandler implements Route {
     String filePathRestricted = "data/" + filepath;
     String headers = request.queryParams("headers");
 
-    // errors that may occur when a parameter as specified above is empty or when both of them are
-    // empty
     if ((filepath == null) && (headers != null)) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_filepath", filepath);
@@ -65,7 +71,7 @@ public class LoadCSVHandler implements Route {
     } else if (headers.toLowerCase().equals("false")) {
       headersOrNot = false;
     }
-    // this is for what happens when having headers in the csv is not indicated within the request
+
     if (headersOrNot == null) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_filepath", filepath);
@@ -87,7 +93,7 @@ public class LoadCSVHandler implements Route {
       responseMap.put("result", "error_datasource");
       responseMap.put("query_filepath", filepath);
       responseMap.put("query_headers", headers);
-      responseMap.put("message", "the file does not exist in directory");
+      responseMap.put("message", "the file does not exist in data directory");
       return adapter.toJson(responseMap);
     } catch (IOException e) {
       responseMap.put("result", "error_cannot_parse");

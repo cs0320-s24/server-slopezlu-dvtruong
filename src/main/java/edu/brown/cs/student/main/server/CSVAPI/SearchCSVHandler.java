@@ -12,12 +12,24 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * Class responsible for handling HTTP requests to CSV API server to search for a specified value in
+ * the loaded CSV file *
+ */
 public class SearchCSVHandler implements Route {
+  /**
+   * Processes HTTP requests to search in a loaded CSV file and produces a response in JSON format
+   * with the result of the request, indicating whether it was successful or not, the query
+   * parameters, such as searchFor value, columnIdentifier, and useColumnHeaders, and a message
+   * providing more info on errors. Handler ensures that a CSV file is first loaded before
+   * attempting to perform a search operation and makes sure that the inputs for the query are
+   * valid, otherwise returns appropriate response
+   *
+   * @param CSVDataSource Data source for searchcsv functionality *
+   */
   private CSVDataSource data;
-  private boolean checkLoadedCSV;
 
   public SearchCSVHandler(CSVDataSource data) {
-    this.checkLoadedCSV = checkLoadedCSV;
     this.data = data;
   }
 
@@ -30,7 +42,7 @@ public class SearchCSVHandler implements Route {
     String searchFor = request.queryParams("searchFor");
     String columnIdentifier = request.queryParams("columnIdentifier");
     String useColumnHeaders = request.queryParams("useColumnHeaders");
-    // If file was not loaded, return the appropriate response
+
     if (!data.checkLoaded()) {
       responseMap.put("result", "error_datasource");
       responseMap.put("query_searchFor", searchFor);
@@ -38,18 +50,14 @@ public class SearchCSVHandler implements Route {
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please load in a file before searching");
       return adapter.toJson(responseMap);
-    }
-    // If no searchFor is provided, return appropriate response
-    else if ((searchFor.isEmpty())) {
+    } else if ((searchFor.isEmpty())) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please specify a value to search for");
       return adapter.toJson(responseMap);
-    }
-    // If no useColumnHeader is provided, return appropriate response
-    else if ((!searchFor.isEmpty())
+    } else if ((!searchFor.isEmpty())
         && (useColumnHeaders.isEmpty())
         && (!columnIdentifier.isEmpty())) {
       responseMap.put("result", "error_bad_request");
@@ -58,13 +66,13 @@ public class SearchCSVHandler implements Route {
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please specify whether to use column headers or not");
       return adapter.toJson(responseMap);
-    }
-    else if(!useColumnHeaders.equals("true") || !useColumnHeaders.equals("false")){
+    } else if (!(useColumnHeaders.equals("true") || useColumnHeaders.equals("false"))) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
-      responseMap.put("message", "please enter either 'true' or 'false' for the useColumnHeader parameter");
+      responseMap.put(
+          "message", "please enter either 'true' or 'false' for the useColumnHeader parameter");
       return adapter.toJson(responseMap);
     }
     try {

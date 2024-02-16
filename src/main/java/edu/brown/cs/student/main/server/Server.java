@@ -12,7 +12,19 @@ import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.CensusAPISour
 import java.io.IOException;
 import spark.Spark;
 
+/**
+ * Class that constructs and runs a web server by initializing the routes for several API endpoints
+ * to allow end-users to make requests and receive responses from the CSV API server, or from the
+ * ACS Census API server. Constructed using the Spark framework *
+ */
 public class Server {
+  /**
+   * Initializes the server with the specified data sources and routes
+   *
+   * @param csvDataSource Data source for loadcsv, viewcsv, and searchcsv functionality
+   * @param broadbandDataSource Data source for broadband data from the ACS Census API server
+   * @throws IOException If an I/O error occurs during server initialization.
+   */
   static final int port = 3232;
 
   private CSVDataSource csvDataSource;
@@ -36,13 +48,16 @@ public class Server {
     Spark.init();
     Spark.awaitInitialization();
   }
-
+  /**
+   * Main method used to initialize the server with CSDataSource and CensusAPISource as parameters.
+   * Produces a message in the terminal to indicate a successful start up of server *
+   */
   public static void main(String[] args) {
     try {
       Server server = new Server(new CSVDataSource(), new CensusAPISource());
     } catch (IOException e) {
-      System.out.println("error occurred when trying to fetch state codes");
+      System.out.println("Error occurred when trying to fetch state codes");
     }
-    System.out.print("starting server...");
+    System.out.print("Starting server...");
   }
 }

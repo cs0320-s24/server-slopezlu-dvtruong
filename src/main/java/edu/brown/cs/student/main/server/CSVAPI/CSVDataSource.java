@@ -17,24 +17,26 @@ public class CSVDataSource {
   private List<List<String>> publicCSV;
   private Map<String, Integer> headers;
   private Map<String, Integer> publicHeaders;
-
+  /**
+   * Class that loads and stores CSV data from a file and gives users access to a read-only form of
+   * it *
+   */
   public CSVDataSource() {
-    this.csv = null; // not sure if using null in this case is smart
+    /**
+     * Loads data from a file, checks that it was successfully loaded, and provides a read-only form
+     * of the CSV data and headers for added security in the form of unmodifiable objects
+     */
+    this.csv = null;
   }
 
   public void load(String filename, boolean headersOrNot)
       throws IOException, FactoryFailureException {
-    // use parser to parse the desired file and fill csv with it
-    // also figure out how to make it safer (they can only access a certain directory or something
-    // like that)
-    // ^^^this may have to be done in the handler
     final Pattern regexSplitCSVRow =
         Pattern.compile(",(?=([^\\\"]*\\\"[^\\\"]*\\\")*(?![^\\\"]*\\\"))");
     BufferedReader reader = new BufferedReader(new FileReader(filename));
     String firstRow = reader.readLine();
     String[] rowArray = regexSplitCSVRow.split(firstRow);
 
-    // for the headers
     this.headers = new HashMap<>();
     if (headersOrNot) {
       int i = 0;
@@ -43,7 +45,6 @@ public class CSVDataSource {
         i++;
       }
     }
-
     this.csv =
         new CSVParser<List<String>>(
                 new FileReader(filename), new ListofStringCreator(rowArray.length), headersOrNot)

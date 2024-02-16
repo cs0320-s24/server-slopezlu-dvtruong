@@ -6,12 +6,20 @@ import com.squareup.moshi.Types;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/** Class responsible for handling HTTP requests to CSV API server to view the loaded CSV file * */
 public class ViewCSVHandler implements Route {
+  /**
+   * Processes HTTP requests to view a loaded CSV file and produces a response in JSON format with
+   * the result of the request, indicating whether it was successful or not, the CSV data itself,
+   * and, in the case of an error, an appropriate response Handler ensures that a CSV file is first
+   * loaded before attempting to perform a view operation, otherwise returns appropriate response
+   *
+   * @param CSVDataSource Data source for searchcsv functionality *
+   */
   private CSVDataSource data;
 
   public ViewCSVHandler(CSVDataSource data) {
@@ -19,10 +27,9 @@ public class ViewCSVHandler implements Route {
   }
 
   @Override
-  public Object handle(Request request, Response response) throws Exception {
+  public Object handle(Request request, Response response) {
     Moshi moshi = new Moshi.Builder().build();
 
-    // For the response map
     Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
     HashMap<String, Object> responseMap = new HashMap<>();
@@ -34,26 +41,8 @@ public class ViewCSVHandler implements Route {
       return adapter.toJson(responseMap);
     }
 
-//    // for returning the CSV data
-//    List<List<String>> returnData = new ArrayList<>();
-//    if (!data.headersProxy().isEmpty()) {
-//      List<String> row = new ArrayList<>();
-//      for (int i = 0; i < data.headersProxy().size(); i++) {
-//        for (String key : data.headersProxy().keySet()) {
-//          if (data.headersProxy().get(key) == i) {
-//            row.add(key);
-//          }
-//        }
-//      }
-//      returnData.add(row);
-//    }
-//    returnData.addAll(data.proxy());
-
-    // returning successful response map
     responseMap.put("result", "success");
-    System.out.println("before");
     responseMap.put("data", data.proxy());
-    System.out.println("after");
     return adapter.toJson(responseMap);
   }
 }

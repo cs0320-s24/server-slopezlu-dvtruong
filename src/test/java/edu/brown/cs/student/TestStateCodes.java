@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
-public class test_StateCodes {
+public class TestStateCodes {
   @Test
   public void test_StateCodes() throws IOException {
     Map<String, String> stateCodes = new StateCountyCodeFetcher().getStateCodes();

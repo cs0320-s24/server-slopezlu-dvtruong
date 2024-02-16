@@ -105,6 +105,5 @@ public class LoadCSVHandler implements Route {
           "there are rows where the numbers of columns are not consistent with the rest of the file");
       return adapter.toJson(responseMap);
     }
-
   }
 }

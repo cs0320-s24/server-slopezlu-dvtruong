@@ -15,9 +15,19 @@ import java.util.List;
 import java.util.Map;
 import okio.Buffer;
 
+/**
+ * Class that sends and receives requests and responses from the Census API and converts them into a
+ * data structure
+ */
 public class CensusAPISource implements BroadbandDataSource {
   private Map<String, String> stateCodes;
 
+  /**
+   * Constructor for the CensusAPISource that, when called, creates an object that houses a hashmap
+   * of all available states in the US and their corresponding code as according to the Census API
+   *
+   * <p>This constructor will throw an error if it cannot connect to the Census API for some reason
+   */
   public CensusAPISource() {
     try {
       this.stateCodes = new StateCountyCodeFetcher().getStateCodes();
@@ -27,6 +37,19 @@ public class CensusAPISource implements BroadbandDataSource {
     }
   }
 
+  /**
+   * A helper for the main method within this class that essentially takes in a state and county and
+   * converts it into their corresponding codes
+   *
+   * @param state the desired state to convert into a state code
+   * @param county the desired county within the specified state to convert into a county code
+   * @return a record, stateCountyCode, that houses two strings that are the state code and county
+   *     code of the desired state and county
+   * @throws IllegalArgumentException if either the state doesn't exist or the county doesn't exist
+   *     within the state
+   * @throws IOException if it is unable to connect to the census to obtain county codes for some
+   *     reason
+   */
   private stateCountyCode resolveStateCounty(String state, String county)
       throws IllegalArgumentException, IOException {
     String stateCode = this.stateCodes.get(state.toLowerCase());
@@ -41,12 +64,34 @@ public class CensusAPISource implements BroadbandDataSource {
     return new stateCountyCode(countyCode, stateCode);
   }
 
+  /**
+   * gets the desired data for a county
+   *
+   * @param input a record of stateCounty where both fields within the record are String with a
+   *     county name and a state name (spaces should be replaced with _)
+   * @return a record, broadbandData, that holds a list of Strings with the state and county,
+   *     percentage of people that have broadband access within the county, and the state and county
+   *     codes
+   * @throws IllegalArgumentException if the state or county doesn't exist
+   * @throws IOException if the connection to the Census API cannot be established for some reason
+   */
   @Override
   public broadbandData getCountyData(stateCounty input)
       throws IllegalArgumentException, IOException {
     return getCountyDataFunction(input.county(), input.state());
   }
 
+  /**
+   * helper for getCountyCode that holds the main functionality of the method
+   *
+   * @param county the desired county to search data for
+   * @param state the state (geological) of the desired county
+   * @return a record broadbandData that holds a list of strings with the state and county name,
+   *     percentage of people that have broadband access within the desired county, and the state
+   *     and county codes
+   * @throws IllegalArgumentException if the state or county doesn't exist
+   * @throws IOException if the connection to the Census API cannot be established for some reason
+   */
   private broadbandData getCountyDataFunction(String county, String state)
       throws IllegalArgumentException, IOException {
     stateCountyCode codes = this.resolveStateCounty(state, county);
@@ -81,5 +126,11 @@ public class CensusAPISource implements BroadbandDataSource {
     return null;
   }
 
+  /**
+   * Record that holds a state and county code combination
+   *
+   * @param countyCode a code for a specific county within the state of the stateCode
+   * @param stateCode a code for a specific state
+   */
   public record stateCountyCode(String countyCode, String stateCode) {}
 }

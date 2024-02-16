@@ -1,4 +1,6 @@
-package edu.brown.cs.student;
+package edu.brown.cs.student.TestCSVAPI;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -13,15 +15,12 @@ import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import spark.Spark;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestViewCSVHandler {
   @BeforeAll
@@ -59,27 +58,32 @@ public class TestViewCSVHandler {
     clientConnection.connect();
     return clientConnection;
   }
+
   private String filepath = "dol_ri_earnings_disparity.csv";
+
   @Test
   public void testViewCSVRequestSuccess() throws IOException {
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");
     assertEquals(200, loadConnection.getResponseCode());
     Map<String, Object> responseLoadBody =
-            adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
+        adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
     assertEquals("success", responseLoadBody.get("result"));
     loadConnection.disconnect();
 
     HttpURLConnection viewConnection = tryRequest("viewcsv");
     assertEquals(200, viewConnection.getResponseCode());
-    Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewConnection.getInputStream()));
+    Map<String, Object> responseBody =
+        adapter.fromJson(new Buffer().readFrom(viewConnection.getInputStream()));
     assertEquals("success", responseBody.get("result"));
     viewConnection.disconnect();
   }
+
   @Test
   public void testViewCSVRequestFail_LoadNotPerformed() throws IOException {
     HttpURLConnection viewConnection = tryRequest("viewcsv");
     assertEquals(200, viewConnection.getResponseCode());
-    Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewConnection.getInputStream()));
+    Map<String, Object> responseBody =
+        adapter.fromJson(new Buffer().readFrom(viewConnection.getInputStream()));
     assertEquals("error_datasource", responseBody.get("result"));
     viewConnection.disconnect();
   }

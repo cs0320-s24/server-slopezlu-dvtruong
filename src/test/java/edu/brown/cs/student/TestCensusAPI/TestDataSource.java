@@ -1,5 +1,7 @@
-package edu.brown.cs.student;
+package edu.brown.cs.student.TestCensusAPI;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.CensusAPISource;
 import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import edu.brown.cs.student.main.server.CensusAPI.broadbandData;

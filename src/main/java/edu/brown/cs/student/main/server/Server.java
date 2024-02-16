@@ -9,6 +9,7 @@ import edu.brown.cs.student.main.server.CSVAPI.ViewCSVHandler;
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPIHandler;
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.BroadbandDataSource;
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.CensusAPISource;
+import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.CensusDataSourceCache;
 import java.io.IOException;
 import spark.Spark;
 
@@ -39,7 +40,8 @@ public class Server {
 
   public static void main(String[] args) {
     try {
-      Server server = new Server(new CSVDataSource(), new CensusAPISource());
+      Server server =
+          new Server(new CSVDataSource(), new CensusDataSourceCache(new CensusAPISource(), 10, 10));
     } catch (IOException e) {
       System.out.println("error occurred when trying to fetch state codes");
     }

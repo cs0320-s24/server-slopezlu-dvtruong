@@ -6,7 +6,6 @@ import com.squareup.moshi.Types;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -34,20 +33,20 @@ public class ViewCSVHandler implements Route {
       return adapter.toJson(responseMap);
     }
 
-//    // for returning the CSV data
-//    List<List<String>> returnData = new ArrayList<>();
-//    if (!data.headersProxy().isEmpty()) {
-//      List<String> row = new ArrayList<>();
-//      for (int i = 0; i < data.headersProxy().size(); i++) {
-//        for (String key : data.headersProxy().keySet()) {
-//          if (data.headersProxy().get(key) == i) {
-//            row.add(key);
-//          }
-//        }
-//      }
-//      returnData.add(row);
-//    }
-//    returnData.addAll(data.proxy());
+    //    // for returning the CSV data
+    //    List<List<String>> returnData = new ArrayList<>();
+    //    if (!data.headersProxy().isEmpty()) {
+    //      List<String> row = new ArrayList<>();
+    //      for (int i = 0; i < data.headersProxy().size(); i++) {
+    //        for (String key : data.headersProxy().keySet()) {
+    //          if (data.headersProxy().get(key) == i) {
+    //            row.add(key);
+    //          }
+    //        }
+    //      }
+    //      returnData.add(row);
+    //    }
+    //    returnData.addAll(data.proxy());
 
     // returning successful response map
     responseMap.put("result", "success");

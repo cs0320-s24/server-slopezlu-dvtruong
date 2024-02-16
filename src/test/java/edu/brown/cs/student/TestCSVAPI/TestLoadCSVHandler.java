@@ -1,4 +1,4 @@
-package edu.brown.cs.student;
+package edu.brown.cs.student.TestCSVAPI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -118,14 +118,15 @@ public class TestLoadCSVHandler {
     assertEquals("error_datasource", responseBody.get("result"));
     loadConnection.disconnect();
   }
+
   @Test
   public void testLoadCSVRequestFail_CannotParse() throws IOException {
-    HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + "malformed_signs.csv" + "&headers=true");
+    HttpURLConnection loadConnection =
+        tryRequest("loadcsv?filepath=" + "malformed_signs.csv" + "&headers=true");
     assertEquals(200, loadConnection.getResponseCode());
     Map<String, Object> responseBody =
-            adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
+        adapter.fromJson(new Buffer().readFrom(loadConnection.getInputStream()));
     assertEquals("error_cannot_parse", responseBody.get("result"));
     loadConnection.disconnect();
   }
-
 }

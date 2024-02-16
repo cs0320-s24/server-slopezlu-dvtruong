@@ -58,13 +58,13 @@ public class SearchCSVHandler implements Route {
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
       responseMap.put("message", "please specify whether to use column headers or not");
       return adapter.toJson(responseMap);
-    }
-    else if(!useColumnHeaders.equals("true") || !useColumnHeaders.equals("false")){
+    } else if (!useColumnHeaders.equals("true") || !useColumnHeaders.equals("false")) {
       responseMap.put("result", "error_bad_request");
       responseMap.put("query_searchFor", searchFor);
       responseMap.put("query_columnIdentifier", columnIdentifier);
       responseMap.put("query_useColumnHeaders", useColumnHeaders);
-      responseMap.put("message", "please enter either 'true' or 'false' for the useColumnHeader parameter");
+      responseMap.put(
+          "message", "please enter either 'true' or 'false' for the useColumnHeader parameter");
       return adapter.toJson(responseMap);
     }
     try {

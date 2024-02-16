@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package edu.brown.cs.student.TestCensusAPI;
 
 import edu.brown.cs.student.main.server.CensusAPI.CensusAPISources.CensusAPISource;

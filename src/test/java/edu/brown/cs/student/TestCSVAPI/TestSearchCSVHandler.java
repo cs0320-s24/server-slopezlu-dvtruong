@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import okio.Buffer;
 import org.junit.jupiter.api.AfterEach;
-<<<<<<< HEAD
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testng.annotations.BeforeClass;
@@ -26,15 +25,6 @@ import spark.Spark;
 /** Class responsible for testing the SearchCSVHandler class * */
 public class TestSearchCSVHandler {
   @BeforeClass
-=======
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import spark.Spark;
-
-public class TestSearchCSVHandler {
-  @BeforeAll
->>>>>>> derek-branch
   public static void setupOnce() {
     Spark.port(0);
     Logger.getLogger("").setLevel(Level.WARNING);
@@ -71,14 +61,10 @@ public class TestSearchCSVHandler {
   }
 
   private String filepath = "dol_ri_earnings_disparity.csv";
-<<<<<<< HEAD
   /**
    * Tests that a successful searchcsv request can be made with a loaded CSV file and the
    * appropriate parameters *
    */
-=======
-
->>>>>>> derek-branch
   @Test
   public void testSearchCSVRequestSuccess() throws IOException {
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");
@@ -96,15 +82,10 @@ public class TestSearchCSVHandler {
     assertEquals("success", responseBody.get("result"));
     searchConnection.disconnect();
   }
-<<<<<<< HEAD
+
   /** Tests that an error_bad_request is produced if no query parameters are provided * */
   @Test
   public void testSearchCSVRequestError_MissingAllParameters() throws IOException {
-=======
-
-  @Test
-  public void testSearchCSVRequestFail_MissingAllParameters() throws IOException {
->>>>>>> derek-branch
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");
     assertEquals(200, loadConnection.getResponseCode());
     Map<String, Object> responseLoadBody =
@@ -120,17 +101,12 @@ public class TestSearchCSVHandler {
     assertEquals("error_bad_request", responseBody.get("result"));
     searchConnection.disconnect();
   }
-<<<<<<< HEAD
+
   /**
    * Tests that an error_bad_request is produced if the searchFor query parameter is not provided *
    */
   @Test
   public void testSearchCSVRequestError_MissingSearchParameter() throws IOException {
-=======
-
-  @Test
-  public void testSearchCSVRequestFail_MissingSearchParameter() throws IOException {
->>>>>>> derek-branch
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");
     assertEquals(200, loadConnection.getResponseCode());
     Map<String, Object> responseLoadBody =
@@ -146,18 +122,12 @@ public class TestSearchCSVHandler {
     assertEquals("error_bad_request", responseBody.get("result"));
     searchConnection.disconnect();
   }
-<<<<<<< HEAD
   /**
    * Tests that an error_bad_request is produced if the useColumnHeaders query parameter is not
    * provided *
    */
   @Test
   public void testSearchCSVRequestError_MissingUseColumnHeadersParameter() throws IOException {
-=======
-
-  @Test
-  public void testSearchCSVRequestFail_MissingUseColumnHeadersParameter() throws IOException {
->>>>>>> derek-branch
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");
     assertEquals(200, loadConnection.getResponseCode());
     Map<String, Object> responseLoadBody =
@@ -173,15 +143,9 @@ public class TestSearchCSVHandler {
     assertEquals("error_bad_request", responseBody.get("result"));
     searchConnection.disconnect();
   }
-<<<<<<< HEAD
   /** Tests that a searchcsv request fails if a file is not loaded in first * */
   @Test
   public void testSearchCSVRequestError_LoadNotPerformed() throws IOException {
-=======
-
-  @Test
-  public void testSearchCSVRequestFail_LoadNotPerformed() throws IOException {
->>>>>>> derek-branch
     HttpURLConnection viewConnection =
         tryRequest("searchcsv?searchFor=White&columnIdentifier=Data_Type&useColumnHeaders=true");
     assertEquals(200, viewConnection.getResponseCode());
@@ -190,18 +154,13 @@ public class TestSearchCSVHandler {
     assertEquals("error_datasource", responseBody.get("result"));
     viewConnection.disconnect();
   }
-<<<<<<< HEAD
+
   /**
    * Tests that an error_no_such_column is produced if the columnIdentifier does not exist in the
    * file *
    */
   @Test
   public void testSearchCSVRequestError_InvalidColumnIdentifier() throws IOException {
-=======
-
-  @Test
-  public void testSearchCSVRequestFail_InvalidColumnIdentifier() throws IOException {
->>>>>>> derek-branch
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");
     assertEquals(200, loadConnection.getResponseCode());
     Map<String, Object> responseLoadBody =
@@ -217,11 +176,8 @@ public class TestSearchCSVHandler {
     assertEquals("error_no_such_column", responseBody.get("result"));
     searchConnection.disconnect();
   }
-<<<<<<< HEAD
-  /** Tests that an error_bad_request is produced if an invalid input for useColumnHeaders * */
-=======
 
->>>>>>> derek-branch
+  /** Tests that an error_bad_request is produced if an invalid input for useColumnHeaders */
   @Test
   public void testSearchCSVRequestFail_InvalidUseColumnHeadersInput() throws IOException {
     HttpURLConnection loadConnection = tryRequest("loadcsv?filepath=" + filepath + "&headers=true");

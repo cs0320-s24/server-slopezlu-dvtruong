@@ -26,14 +26,9 @@ import org.junit.jupiter.api.Test;
 import org.testng.annotations.BeforeClass;
 import spark.Spark;
 
-
-/**
- * Tests for the CensusAPIHandler on a mock data source
- */
+/** Tests for the CensusAPIHandler on a mock data source */
 public class TestCensusAPIHandlerMock {
-  /**
-   * sets up the server on a port
-   */
+  /** sets up the server on a port */
   @BeforeClass
   public static void setupBeforeAll() {
     Spark.port(0);
@@ -45,7 +40,8 @@ public class TestCensusAPIHandlerMock {
   private JsonAdapter<Map<String, Object>> adapter;
 
   /**
-   * sets up the server to accept "/broadband" and sets up the adapter to convert response maps to use assertequals
+   * sets up the server to accept "/broadband" and sets up the adapter to convert response maps to
+   * use assertequals
    */
   @BeforeEach
   public void setup() {
@@ -65,9 +61,7 @@ public class TestCensusAPIHandlerMock {
     adapter = moshi.adapter(mapStringObject);
   }
 
-  /**
-   * shuts down the server gracefully
-   */
+  /** shuts down the server gracefully */
   @AfterEach
   public void teardown() {
     Spark.unmap("/broadband");
@@ -76,6 +70,7 @@ public class TestCensusAPIHandlerMock {
 
   /**
    * method that constructs the request to the server
+   *
    * @param toRequest the state and county to request data for
    * @return a connnection that holds the response from the server
    * @throws IOException if the connection to the server cannot be established for some reason
@@ -113,6 +108,7 @@ public class TestCensusAPIHandlerMock {
 
   /**
    * Tests when there is a successful request
+   *
    * @throws IOException if connection to server cannot be established for some reason
    */
   @Test
@@ -137,6 +133,7 @@ public class TestCensusAPIHandlerMock {
 
   /**
    * Tests when there are missing fields
+   *
    * @throws IOException if the connection to the server cannot be established for some reason
    */
   @Test
@@ -176,6 +173,7 @@ public class TestCensusAPIHandlerMock {
 
   /**
    * Tests for when the state/county combination doesn't exist within the dataset
+   *
    * @throws IOException if the connection to the server cannot be established for some reason
    */
   @Test

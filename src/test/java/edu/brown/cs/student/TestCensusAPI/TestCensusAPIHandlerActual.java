@@ -22,13 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import spark.Spark;
 
-/**
- * Testing the CensusAPIHandler on the actual Census API
- */
+/** Testing the CensusAPIHandler on the actual Census API */
 public class TestCensusAPIHandlerActual {
-  /**
-   * setup the server on a port
-   */
+  /** setup the server on a port */
   @BeforeAll
   public static void setupBeforeAll() {
     Spark.port(0);
@@ -40,7 +36,8 @@ public class TestCensusAPIHandlerActual {
   private JsonAdapter<Map<String, Object>> adapter;
 
   /**
-   * sets up the server to accept "/broadband" and builds the adapter to assert tests on the responses
+   * sets up the server to accept "/broadband" and builds the adapter to assert tests on the
+   * responses
    */
   @BeforeEach
   public void setup() {
@@ -51,9 +48,7 @@ public class TestCensusAPIHandlerActual {
     adapter = moshi.adapter(mapStringObject);
   }
 
-  /**
-   * gracefully shuts down the server
-   */
+  /** gracefully shuts down the server */
   @AfterEach
   public void teardown() {
     Spark.unmap("/broadband");
@@ -62,6 +57,7 @@ public class TestCensusAPIHandlerActual {
 
   /**
    * method that constructs the request to the server
+   *
    * @param toRequest the state and county to request data for
    * @return a connnection that holds the response from the server
    * @throws IOException if the connection to the server cannot be established for some reason
@@ -99,6 +95,7 @@ public class TestCensusAPIHandlerActual {
 
   /**
    * Tests for when there are successful requests
+   *
    * @throws IOException if connection to server cannot be established
    */
   @Test
@@ -113,6 +110,7 @@ public class TestCensusAPIHandlerActual {
 
   /**
    * Tests for when there are missing fields (null) within the request
+   *
    * @throws IOException if connection to server cannot be established
    */
   @Test
@@ -152,6 +150,7 @@ public class TestCensusAPIHandlerActual {
 
   /**
    * Tests for when the state/county combination that is requested doesn't exist
+   *
    * @throws IOException if connection to server cannot be established for some reason
    */
   @Test

@@ -14,13 +14,16 @@ import java.util.Map;
 import okio.Buffer;
 
 /**
- * Class that holds the functionality for fetching all of the state codes and the county code for a desired county
+ * Class that holds the functionality for fetching all of the state codes and the county code for a
+ * desired county
  */
 public class StateCountyCodeFetcher {
 
   /**
    * creates a hashmap of all of the states and their corresponding state codes
-   * @return a hashmap of String to String that maps all of the states to their corresponding state codes
+   *
+   * @return a hashmap of String to String that maps all of the states to their corresponding state
+   *     codes
    * @throws IOException if the connection to the Census API cannot be established for some reason
    */
   public Map<String, String> getStateCodes() throws IOException {
@@ -48,6 +51,7 @@ public class StateCountyCodeFetcher {
 
   /**
    * returns a county code for a specified county
+   *
    * @param stateCode the statecode of the state that the county is in
    * @param countyName the name of the desired county where spaces are replaced with _
    * @return a string that is the county code of the specified county

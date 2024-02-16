@@ -12,7 +12,7 @@ Additionally, we created a handler for ACS Census API requests, which fetches ho
 We used a BroadbandDatsource interface to allow the developer to choose if they want to use the cache or not. If they do not want to use it, they can create an instance of CensusAPISource and pass it into the Server parameter. If they do, they can create an instance of the CensusDataSourceCache instead. Cache parameters like size and time duration are customizable, providing developers with control over cache behavior.
   
 # Errors/Bugs
-
+Catching the IllegalArgumentException for the case of the inputted state and county combination not existing in the Census data (when we provide the data source for the handler to use as the caching data source) produces a 500 internal error (it is not caught in our handler). 
 # Tests
 * To ensure that the server behaves as expected, we performed various integration tests that cover scenarios like successful request handling, error handling for malformed requests, and several edge cases. In addition to that, we also formed various unit tests to ensure that the helper methods, such as those used in CensusAPI Source, like getCountyData(), also worked correctly under several conditions.
 *  **TestCSVAPI Suite**

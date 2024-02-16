@@ -2,6 +2,7 @@ package edu.brown.cs.student.main.server.CensusAPI.CensusAPISources;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import edu.brown.cs.student.main.server.CensusAPI.StateAndCountyCodes.stateCounty;
 import edu.brown.cs.student.main.server.CensusAPI.broadbandData;
@@ -24,9 +25,10 @@ public class CensusDataSourceCache implements BroadbandDataSource {
    *     within the cache
    * @param cacheSize the desired number of items for the cache to hold before removal
    * @param timeDuration the desired number of minutes the cache should hold data for before removal
+   * @param timeUnit the units of the timeDuration
    */
   public CensusDataSourceCache(
-      BroadbandDataSource sourceToWrap, Integer cacheSize, Integer timeDuration) {
+      BroadbandDataSource sourceToWrap, Integer cacheSize, int timeDuration, TimeUnit timeUnit) {
     this.wrappedSource = sourceToWrap;
     if (cacheSize == 0 && timeDuration == 0) {
       this.cache =
@@ -35,7 +37,8 @@ public class CensusDataSourceCache implements BroadbandDataSource {
               .build(
                   new CacheLoader<stateCounty, broadbandData>() {
                     @Override
-                    public broadbandData load(stateCounty stateCounty) throws IOException {
+                    public broadbandData load(stateCounty stateCounty)
+                        throws IllegalArgumentException, IOException {
                       return wrappedSource.getCountyData(stateCounty);
                     }
                   });
@@ -43,12 +46,13 @@ public class CensusDataSourceCache implements BroadbandDataSource {
     } else if (cacheSize == 0) {
       this.cache =
           CacheBuilder.newBuilder()
-              .expireAfterWrite(timeDuration, TimeUnit.MINUTES)
+              .expireAfterWrite(timeDuration, timeUnit)
               .recordStats()
               .build(
                   new CacheLoader<stateCounty, broadbandData>() {
                     @Override
-                    public broadbandData load(stateCounty stateCounty) throws IOException {
+                    public broadbandData load(stateCounty stateCounty)
+                        throws IllegalArgumentException, IOException {
                       return wrappedSource.getCountyData(stateCounty);
                     }
                   });
@@ -60,7 +64,8 @@ public class CensusDataSourceCache implements BroadbandDataSource {
               .build(
                   new CacheLoader<stateCounty, broadbandData>() {
                     @Override
-                    public broadbandData load(stateCounty stateCounty) throws IOException {
+                    public broadbandData load(stateCounty stateCounty)
+                        throws IllegalArgumentException, IOException {
                       return wrappedSource.getCountyData(stateCounty);
                     }
                   });
@@ -68,12 +73,13 @@ public class CensusDataSourceCache implements BroadbandDataSource {
       this.cache =
           CacheBuilder.newBuilder()
               .maximumSize(cacheSize)
-              .expireAfterWrite(timeDuration, TimeUnit.MINUTES)
+              .expireAfterWrite(timeDuration, timeUnit)
               .recordStats()
               .build(
                   new CacheLoader<stateCounty, broadbandData>() {
                     @Override
-                    public broadbandData load(stateCounty stateCounty) throws IOException {
+                    public broadbandData load(stateCounty stateCounty)
+                        throws IllegalArgumentException, IOException {
                       return wrappedSource.getCountyData(stateCounty);
                     }
                   });
@@ -99,5 +105,9 @@ public class CensusDataSourceCache implements BroadbandDataSource {
     broadbandData result = cache.getUnchecked(input);
     System.out.println(cache.stats());
     return result;
+  }
+
+  public CacheStats getStats() {
+      return cache.stats();
   }
 }
